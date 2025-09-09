@@ -414,177 +414,163 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
             >
               <Section
-                title="Your Preferences"
-                subtitle="Select all that apply. Multiple choices are allowed."
-              >
-                <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
-                  {/* Associations */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you like to associate with Maestera for teaching,
-                      performances, or both?
-                    </div>
-                    <div className="grid sm:grid-cols-3 gap-3">
-                      {["Education/Teaching", "Performances", "Both"].map(
-                        (v) => (
-                          <Radio
-                            key={v}
-                            name="assoc"
-                            value={v}
-                            current={assoc}
-                            onChange={setAssoc}
-                            label={v}
-                          />
-                        )
-                      )}
-                    </div>
-                  </div>
+  title="Your Preferences"
+  subtitle="Select the options that best describe you."
+>
+  <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
+    {/* Association */}
+    <div>
+      <div className="text-sm font-semibold text-neutral-900 mb-3">
+        Would you like to associate with Maestera for teaching, performances, or both? (any one)
+      </div>
+      <div className="grid sm:grid-cols-3 gap-3">
+        {["Education/Teaching", "Performances", "Both"].map((v) => (
+          <Radio
+            key={v}
+            name="assoc"
+            value={v}
+            current={assoc}
+            onChange={setAssoc}
+            label={v}
+          />
+        ))}
+      </div>
+    </div>
 
-                  {/* Class formats */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      What class formats do you currently teach or would be open to?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Individual classes - Online",
-                        "Individual Classes - Teacher's Place",
-                        "Individual Classes - Student's Place",
-                        "Group classes - Online",
-                        "Group Classes - Teacher's Place",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.classFormats.has(label)}
-                          onChange={() => toggle("classFormats", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+    {/* Class formats */}
+    <div>
+      <div className="text-sm font-semibold text-neutral-900 mb-3">
+        What class formats do you currently teach or would be open to? (Multiple options can be selected)
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {[
+          "Individual classes - Online",
+          "Individual Classes - Teacher's Place",
+          "Individual Classes - Student's Place",
+          "Group classes - Online",
+          "Group Classes - Teacher's Place",
+          "None of the above - I don't teach",
+          "Other",
+        ].map((label) => (
+          <Checkbox
+            key={label}
+            label={label}
+            checked={multi.classFormats.has(label)}
+            onChange={() => toggle("classFormats", label)}
+          />
+        ))}
+      </div>
+    </div>
 
-                  {/* Exams */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Do you provide, or are open to providing, training for any of these exams?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Trinity",
-                        "ABRSM",
-                        "Rockschool",
-                        "NTB",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.exams.has(label)}
-                          onChange={() => toggle("exams", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+    {/* Exams */}
+    <div>
+      <div className="text-sm font-semibold text-neutral-900 mb-3">
+        Do you provide, or open to providing, training for any of these exams? (Multiple options can be selected)
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {[
+          "Trinity",
+          "ABRSM",
+          "Rockschool",
+          "NTB",
+          "None of the above - I don't teach",
+          "Other",
+        ].map((label) => (
+          <Checkbox
+            key={label}
+            label={label}
+            checked={multi.exams.has(label)}
+            onChange={() => toggle("exams", label)}
+          />
+        ))}
+      </div>
+    </div>
 
-                  {/* Additional formats */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which additional formats would you like to be involved in with Maestera?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Certificate Courses",
-                        "Workshops",
-                        "Masterclass",
-                        "Teach/Work at educational institutions",
-                        "Online classes - Students residing abroad",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.additionalFormats.has(label)}
-                          onChange={() => toggle("additionalFormats", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+    {/* Additional formats */}
+    <div>
+      <div className="text-sm font-semibold text-neutral-900 mb-3">
+        Which additional formats would you like to be involved in with Maestera? (Multiple options can be selected)
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {[
+          "Certificate Courses",
+          "Workshops",
+          "Masterclass",
+          "Teach/Work at educational institutions",
+          "Online classes - Students residing abroad",
+          "None of the above - I don't teach",
+          "Other",
+        ].map((label) => (
+          <Checkbox
+            key={label}
+            label={label}
+            checked={multi.additionalFormats.has(label)}
+            onChange={() => toggle("additionalFormats", label)}
+          />
+        ))}
+      </div>
+    </div>
 
-                  {/* Learner groups */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which groups of learners do you prefer to teach?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Beginners",
-                        "Intermediate",
-                        "Advanced",
-                        "Children",
-                        "Teenagers",
-                        "Adults",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.learnerGroups.has(label)}
-                          onChange={() => toggle("learnerGroups", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+    {/* Learner groups */}
+    <div>
+      <div className="text-sm font-semibold text-neutral-900 mb-3">
+        Which of these learner groups are you confident in teaching? (Multiple options can be selected)
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
+          <Checkbox
+            key={label}
+            label={label}
+            checked={multi.learnerGroups.has(label)}
+            onChange={() => toggle("learnerGroups", label)}
+          />
+        ))}
+      </div>
+    </div>
 
-                  {/* Performance settings */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      What performance settings are you open to?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Solo",
-                        "Ensembles",
-                        "Part of Bands",
-                        "Corporate Gigs",
-                        "Weddings",
-                        "Casual/Social Gatherings",
-                        "None of the above - I don't perform",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.performanceSettings.has(label)}
-                          onChange={() => toggle("performanceSettings", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+    {/* Performance settings */}
+    <div>
+      <div className="text-sm font-semibold text-neutral-900 mb-3">
+        Please select the performance settings you are currently active in (or open to exploring)
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {[
+          "Corporates",
+          "Restaurants/Hotels/Cafes",
+          "Social gatherings",
+          "Weddings",
+          "Cultural events",
+          "Religious",
+        ].map((label) => (
+          <Checkbox
+            key={label}
+            label={label}
+            checked={multi.performanceSettings.has(label)}
+            onChange={() => toggle("performanceSettings", label)}
+          />
+        ))}
+      </div>
+    </div>
 
-                  {/* Collab projects */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you like to be part of collaborations or projects
-                      initiated by Maestera?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {["Yes", "No"].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.collabProjects.has(label)}
-                          onChange={() => toggle("collabProjects", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </Section>
+    {/* Collab projects */}
+    <div>
+      <div className="text-sm font-semibold text-neutral-900 mb-3">
+        Would you be open to participating in collaborative music projects such as the following?
+      </div>
+      <div className="grid sm:grid-cols-2 gap-3">
+        {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+          <Checkbox
+            key={label}
+            label={label}
+            checked={multi.collabProjects.has(label)}
+            onChange={() => toggle("collabProjects", label)}
+          />
+        ))}
+      </div>
+    </div>
+  </div>
+</Section>
+
               {error && (
                 <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
               )}
