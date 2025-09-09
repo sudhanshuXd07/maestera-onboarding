@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from "framer-motion";
 /**
  * Maestera – Teacher Onboarding (React + Tailwind)
  * Steps: Intro → Basic Info → Preferences → Submit
- * Storage: posts JSON to Google Apps Script Web App (proxied via /api/submit)
+ * Storage: posts JSON directly to Google Apps Script Web App
  */
 
-const SHEETS_SCRIPT_URL = "/api/submit";
-
+const SHEETS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbx8DZgIpM92kk1jQm1-oLtIfQuYm2NzAsmInBZ6rtx_cLGXQMPkr6bhvo7PzKDhCJQp/exec";
 
 const brand = {
   black: "#0a0a0a",
@@ -517,33 +517,44 @@ export default function App() {
                   {/* Learner groups */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which of these learner groups are you confident in teaching?
+                      Which groups of learners do you prefer to teach?
                     </div>
-                    <div className="grid sm:grid-cols-3 gap-3">
-                                            {["Children", "Teenagers", "Adults", "Senior Citizens"].map(
-                        (label) => (
-                          <Checkbox
-                            key={label}
-                            label={label}
-                            checked={multi.learnerGroups.has(label)}
-                            onChange={() => toggle("learnerGroups", label)}
-                          />
-                        )
-                      )}
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {[
+                        "Beginners",
+                        "Intermediate",
+                        "Advanced",
+                        "Children",
+                        "Teenagers",
+                        "Adults",
+                        "None of the above - I don't teach",
+                        "Other",
+                      ].map((label) => (
+                        <Checkbox
+                          key={label}
+                          label={label}
+                          checked={multi.learnerGroups.has(label)}
+                          onChange={() => toggle("learnerGroups", label)}
+                        />
+                      ))}
                     </div>
                   </div>
 
                   {/* Performance settings */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you be interested in performing at the following settings?
+                      What performance settings are you open to?
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {[
-                        "Public concerts",
-                        "Private events",
-                        "Corporate events",
-                        "Collaborations with other artists",
+                        "Solo",
+                        "Ensembles",
+                        "Part of Bands",
+                        "Corporate Gigs",
+                        "Weddings",
+                        "Casual/Social Gatherings",
+                        "None of the above - I don't perform",
+                        "Other",
                       ].map((label) => (
                         <Checkbox
                           key={label}
@@ -558,10 +569,11 @@ export default function App() {
                   {/* Collab projects */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you like to be considered for collaborations and projects with other teachers or artists?
+                      Would you like to be part of collaborations or projects
+                      initiated by Maestera?
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
-                      {["Yes", "No", "Maybe"].map((label) => (
+                      {["Yes", "No"].map((label) => (
                         <Checkbox
                           key={label}
                           label={label}
@@ -572,14 +584,10 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-
-                {error && (
-                  <div className="mt-4 text-sm text-rose-700 bg-rose-50 border border-rose-200 rounded-xl p-3">
-                    {error}
-                  </div>
-                )}
               </Section>
-
+              {error && (
+                <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
+              )}
               <StepNav
                 step={2}
                 total={3}
@@ -592,15 +600,6 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
-
-      {/* Footer */}
-      <footer className="mt-16">
-        <div className="h-[5px] w-full bg-rose-600" />
-        <div className="py-6 text-center text-xs text-neutral-600">
-          © {new Date().getFullYear()} Maestera • Made with ♫
-        </div>
-      </footer>
     </div>
   );
 }
-
