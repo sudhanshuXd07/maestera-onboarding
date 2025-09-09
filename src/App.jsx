@@ -1,18 +1,18 @@
 import React, { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import logo from "./assets/logomaestera.jpeg";
 
 /**
  * Maestera – Teacher Onboarding (React + Tailwind)
  * Steps: Intro → Basic Info → Preferences → Submit
- * Storage: posts JSON directly to Google Apps Script Web App
+ * Storage: posts JSON (proxied via /api/submit)
  */
 
-const SHEETS_SCRIPT_URL = "/api/submit";
-
+const SHEETS_SCRIPT_URL = "/api/submit"; // change to direct Google Script URL if you prefer
 
 const brand = {
   black: "#0a0a0a",
-  red: "#e11d48", // Tailwind rose-600
+  red: "#e11d48",
   offwhite: "#fafafa",
 };
 
@@ -105,7 +105,7 @@ const StepNav = ({ step, total, onBack, onNext, canNext, submitting }) => (
 
 export default function App() {
   const [step, setStep] = useState(0);
-  const stepsTotal = 3;
+  const totalSteps = 3;
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -168,7 +168,6 @@ export default function App() {
     [basic, assoc, multi]
   );
 
-  // Submit function
   const submit = async () => {
     setSubmitting(true);
     setError("");
@@ -183,7 +182,7 @@ export default function App() {
       try {
         result = await res.json();
       } catch {
-        throw new Error("Invalid JSON response");
+        throw new Error("Invalid JSON response from server");
       }
 
       console.log("Response from API:", result);
@@ -199,10 +198,10 @@ export default function App() {
   };
 
   const onNext = () => {
-    if (step === 2) {
+    if (step === totalSteps - 1) {
       submit();
     } else {
-      setStep((s) => Math.min(s + 1, 2));
+      setStep((s) => Math.min(s + 1, totalSteps - 1));
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
@@ -214,16 +213,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
-      {/* Header */}
+      {/* Header: only logo centered */}
       <header className="w-full" style={{ backgroundColor: brand.black }}>
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl font-semibold text-white">Maestera</span>
-            <span className="text-white/70 text-sm">all things music.</span>
-          </div>
-          <div className="hidden md:block text-white/80 text-sm">
-            Teacher Onboarding
-          </div>
+        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-center">
+          <img src={logo} alt="Maestera Logo" className="h-16 w-auto" />
         </div>
         <div className="h-1 w-full bg-rose-600" />
       </header>
@@ -290,25 +283,15 @@ export default function App() {
                     Welcome to Maestera
                   </h1>
                   <p className="mt-4 text-neutral-700 leading-relaxed">
-                    Thank you for your passion for music and for joining
-                    Maestera — India’s most flexible and inclusive platform for
-                    music education. While our core focus is helping students
-                    learn and grow, we know that many teachers also share their
-                    art through performances. By being part of Maestera, you’ll
-                    have the chance to showcase not only your teaching but also
-                    your performing side — opening up opportunities with
-                    students, families, and event organizers alike.
+                    Thank you for your passion for music and for joining Maestera — India’s most flexible and inclusive platform for music education. While our core focus is helping students learn and grow, we know that many teachers also share their art through performances. By being part of Maestera, you’ll have the chance to showcase not only your teaching but also your performing side — opening up opportunities with students, families, and event organizers alike.
                   </p>
                   <p className="mt-4 text-neutral-700">
-                    This quick form will take just 30–60 seconds to complete. It
-                    helps us get to know you better so we can connect you with
-                    the right students and, where relevant, highlight your
-                    performance journey too.
+                    This quick form will take just 30–60 seconds to complete. It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
                   </p>
                 </div>
                 <div className="h-1 w-full bg-rose-600" />
                 <div className="p-6 flex items-center justify-between">
-                  <div className="text-neutral-600 text-sm">Step 1 of 3</div>
+                  <div className="text-neutral-600 text-sm">Step 1 of {totalSteps}</div>
                   <button
                     className="px-6 py-2.5 rounded-xl text-white"
                     style={{ backgroundColor: brand.black }}
@@ -398,8 +381,8 @@ export default function App() {
                 </div>
               </Section>
               <StepNav
-                step={1 - 0}
-                total={3}
+                step={step}
+                total={totalSteps}
                 onBack={onBack}
                 onNext={onNext}
                 canNext={canNext}
@@ -414,169 +397,165 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
             >
               <Section
-  title="Your Preferences"
-  subtitle="Select the options that best describe you."
->
-  <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
-    {/* Association */}
-    <div>
-      <div className="text-sm font-semibold text-neutral-900 mb-3">
-        Would you like to associate with Maestera for teaching, performances, or both? (any one)
-      </div>
-      <div className="grid sm:grid-cols-3 gap-3">
-        {["Education/Teaching", "Performances", "Both"].map((v) => (
-          <Radio
-            key={v}
-            name="assoc"
-            value={v}
-            current={assoc}
-            onChange={setAssoc}
-            label={v}
-          />
-        ))}
-      </div>
-    </div>
+                title="Your Preferences"
+                subtitle="Select the options that best describe you."
+              >
+                <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
+                  {/* Association */}
+                  <div>
+                    <div className="text-sm font-semibold text-neutral-900 mb-3">
+                      Would you like to associate with Maestera for teaching, performances, or both? (any one)
+                    </div>
+                    <div className="grid sm:grid-cols-3 gap-3">
+                      {["Education/Teaching", "Performances", "Both"].map((v) => (
+                        <Radio
+                          key={v}
+                          name="assoc"
+                          value={v}
+                          current={assoc}
+                          onChange={setAssoc}
+                          label={v}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-    {/* Class formats */}
-    <div>
-      <div className="text-sm font-semibold text-neutral-900 mb-3">
-        What class formats do you currently teach or would be open to? (Multiple options can be selected)
-      </div>
-      <div className="grid sm:grid-cols-2 gap-3">
-        {[
-          "Individual classes - Online",
-          "Individual Classes - Teacher's Place",
-          "Individual Classes - Student's Place",
-          "Group classes - Online",
-          "Group Classes - Teacher's Place",
-          "None of the above - I don't teach",
-          "Other",
-        ].map((label) => (
-          <Checkbox
-            key={label}
-            label={label}
-            checked={multi.classFormats.has(label)}
-            onChange={() => toggle("classFormats", label)}
-          />
-        ))}
-      </div>
-    </div>
+                  {/* Class formats */}
+                  <div>
+                    <div className="text-sm font-semibold text-neutral-900 mb-3">
+                      What class formats do you currently teach or would be open to? (Multiple options can be selected)
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {[
+                        "Individual classes - Online",
+                        "Individual Classes - Teacher's Place",
+                        "Individual Classes - Student's Place",
+                        "Group classes - Online",
+                        "Group Classes - Teacher's Place",
+                        "None of the above - I don't teach",
+                        "Other",
+                      ].map((label) => (
+                        <Checkbox
+                          key={label}
+                          label={label}
+                          checked={multi.classFormats.has(label)}
+                          onChange={() => toggle("classFormats", label)}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-    {/* Exams */}
-    <div>
-      <div className="text-sm font-semibold text-neutral-900 mb-3">
-        Do you provide, or open to providing, training for any of these exams? (Multiple options can be selected)
-      </div>
-      <div className="grid sm:grid-cols-2 gap-3">
-        {[
-          "Trinity",
-          "ABRSM",
-          "Rockschool",
-          "NTB",
-          "None of the above - I don't teach",
-          "Other",
-        ].map((label) => (
-          <Checkbox
-            key={label}
-            label={label}
-            checked={multi.exams.has(label)}
-            onChange={() => toggle("exams", label)}
-          />
-        ))}
-      </div>
-    </div>
+                  {/* Exams */}
+                  <div>
+                    <div className="text-sm font-semibold text-neutral-900 mb-3">
+                      Do you provide, or open to providing, training for any of these exams? (Multiple options can be selected)
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
+                        (label) => (
+                          <Checkbox
+                            key={label}
+                            label={label}
+                            checked={multi.exams.has(label)}
+                            onChange={() => toggle("exams", label)}
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
 
-    {/* Additional formats */}
-    <div>
-      <div className="text-sm font-semibold text-neutral-900 mb-3">
-        Which additional formats would you like to be involved in with Maestera? (Multiple options can be selected)
-      </div>
-      <div className="grid sm:grid-cols-2 gap-3">
-        {[
-          "Certificate Courses",
-          "Workshops",
-          "Masterclass",
-          "Teach/Work at educational institutions",
-          "Online classes - Students residing abroad",
-          "None of the above - I don't teach",
-          "Other",
-        ].map((label) => (
-          <Checkbox
-            key={label}
-            label={label}
-            checked={multi.additionalFormats.has(label)}
-            onChange={() => toggle("additionalFormats", label)}
-          />
-        ))}
-      </div>
-    </div>
+                  {/* Additional formats */}
+                  <div>
+                    <div className="text-sm font-semibold text-neutral-900 mb-3">
+                      Which additional formats would you like to be involved in with Maestera? (Multiple options can be selected)
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {[
+                        "Certificate Courses",
+                        "Workshops",
+                        "Masterclass",
+                        "Teach/Work at educational institutions",
+                        "Online classes - Students residing abroad",
+                        "None of the above - I don't teach",
+                        "Other",
+                      ].map((label) => (
+                        <Checkbox
+                          key={label}
+                          label={label}
+                          checked={multi.additionalFormats.has(label)}
+                          onChange={() => toggle("additionalFormats", label)}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-    {/* Learner groups */}
-    <div>
-      <div className="text-sm font-semibold text-neutral-900 mb-3">
-        Which of these learner groups are you confident in teaching? (Multiple options can be selected)
-      </div>
-      <div className="grid sm:grid-cols-2 gap-3">
-        {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
-          <Checkbox
-            key={label}
-            label={label}
-            checked={multi.learnerGroups.has(label)}
-            onChange={() => toggle("learnerGroups", label)}
-          />
-        ))}
-      </div>
-    </div>
+                  {/* Learner groups */}
+                  <div>
+                    <div className="text-sm font-semibold text-neutral-900 mb-3">
+                      Which of these learner groups are you confident in teaching? (Multiple options can be selected)
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
+                        <Checkbox
+                          key={label}
+                          label={label}
+                          checked={multi.learnerGroups.has(label)}
+                          onChange={() => toggle("learnerGroups", label)}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-    {/* Performance settings */}
-    <div>
-      <div className="text-sm font-semibold text-neutral-900 mb-3">
-        Please select the performance settings you are currently active in (or open to exploring)
-      </div>
-      <div className="grid sm:grid-cols-2 gap-3">
-        {[
-          "Corporates",
-          "Restaurants/Hotels/Cafes",
-          "Social gatherings",
-          "Weddings",
-          "Cultural events",
-          "Religious",
-        ].map((label) => (
-          <Checkbox
-            key={label}
-            label={label}
-            checked={multi.performanceSettings.has(label)}
-            onChange={() => toggle("performanceSettings", label)}
-          />
-        ))}
-      </div>
-    </div>
+                  {/* Performance settings */}
+                  <div>
+                    <div className="text-sm font-semibold text-neutral-900 mb-3">
+                      Please select the performance settings you are currently active in (or open to exploring)
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {[
+                        "Corporates",
+                        "Restaurants/Hotels/Cafes",
+                        "Social gatherings",
+                        "Weddings",
+                        "Cultural events",
+                        "Religious",
+                      ].map((label) => (
+                        <Checkbox
+                          key={label}
+                          label={label}
+                          checked={multi.performanceSettings.has(label)}
+                          onChange={() => toggle("performanceSettings", label)}
+                        />
+                      ))}
+                    </div>
+                  </div>
 
-    {/* Collab projects */}
-    <div>
-      <div className="text-sm font-semibold text-neutral-900 mb-3">
-        Would you be open to participating in collaborative music projects such as the following?
-      </div>
-      <div className="grid sm:grid-cols-2 gap-3">
-        {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
-          <Checkbox
-            key={label}
-            label={label}
-            checked={multi.collabProjects.has(label)}
-            onChange={() => toggle("collabProjects", label)}
-          />
-        ))}
-      </div>
-    </div>
-  </div>
-</Section>
+                  {/* Collab projects */}
+                  <div>
+                    <div className="text-sm font-semibold text-neutral-900 mb-3">
+                      Would you be open to participating in collaborative music projects such as the following?
+                    </div>
+                    <div className="grid sm:grid-cols-2 gap-3">
+                      {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+                        <Checkbox
+                          key={label}
+                          label={label}
+                          checked={multi.collabProjects.has(label)}
+                          onChange={() => toggle("collabProjects", label)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Section>
 
               {error && (
                 <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
               )}
+
               <StepNav
-                step={2}
-                total={3}
+                step={step}
+                total={totalSteps}
                 onBack={onBack}
                 onNext={onNext}
                 canNext={canNext}
@@ -586,6 +565,14 @@ export default function App() {
           )}
         </AnimatePresence>
       </main>
+
+      {/* Footer */}
+      <footer className="mt-16">
+        <div className="h-[5px] w-full bg-rose-600" />
+        <div className="py-6 text-center text-xs text-neutral-600">
+          © {new Date().getFullYear()} Maestera • Made with ♫
+        </div>
+      </footer>
     </div>
   );
 }
