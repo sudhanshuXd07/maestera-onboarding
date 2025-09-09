@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
  * Storage: posts JSON to Google Apps Script Web App (proxied via /api/submit)
  */
 
-const SHEETS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8DZgIpM92kk1jQm1-oLtIfQuYm2NzAsmInBZ6rtx_cLGXQMPkr6bhvo7PzKDhCJQp/exec";
+const SHEETS_SCRIPT_URL = "/api/submit";
 
 
 const brand = {
