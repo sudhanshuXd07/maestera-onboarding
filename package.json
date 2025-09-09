@@ -2,7 +2,6 @@
   "name": "maestera-onboarding",
   "private": true,
   "version": "0.0.0",
-  "type": "module",              
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,7 +10,6 @@
   },
   "dependencies": {
     "framer-motion": "^12.23.12",
-    "node-fetch": "^3.3.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
@@ -27,7 +25,6 @@
     "globals": "^16.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
-    "vercel": "^47.0.6",
     "vite": "^7.1.2"
   }
 }
