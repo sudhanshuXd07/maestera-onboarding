@@ -213,13 +213,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
-      {/* Header: only logo centered */}
-      <header className="w-full" style={{ backgroundColor: brand.black }}>
-        <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-center">
-          <img src={logo} alt="Maestera Logo" className="h-16 w-auto" />
+    
+      <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
+      <div className="max-w-6xl mx-auto flex items-center justify-between">
+        {/* Left + Mid (logo shifted a bit left) */}
+        <div className="flex items-center gap-4 flex-grow">
+          <img
+            src={logo}
+            alt="Maestera Logo"
+            className="h-16 object-contain"
+          />
         </div>
-        <div className="h-1 w-full bg-rose-600" />
-      </header>
+
+        {/* Right text */}
+        <div className="text-white text-lg font-medium">
+          All Things Music
+        </div>
+      </div>
+    </header>
 
       {/* Content */}
       <main className="max-w-5xl mx-auto px-6 py-10">
