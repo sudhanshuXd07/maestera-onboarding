@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
  * Storage: posts JSON to a Google Apps Script Web App (see SHEETS_SCRIPT_URL)
  */
 
-const SHEETS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx8DZgIpM92kk1jQm1-oLtIfQuYm2NzAsmInBZ6rtx_cLGXQMPkr6bhvo7PzKDhCJQp/exec";
+const SHEETS_SCRIPT_URL = "/api/submit";
 
 
 
