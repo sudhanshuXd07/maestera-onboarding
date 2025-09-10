@@ -153,18 +153,17 @@ export default function App() {
 
 
   const basicValid = useMemo(() => {
-    const emailOk = /\S+@\S+\.\S+/.test(basic.email);
-    const phoneOk = /^[0-9]{7,}$/.test(basic.phone);
+    const emailOk = /\S+@\S+\.\S+/.test(basic.email || "");
+    const phoneOk = /^[0-9]{7,}$/.test((basic.phone || "").replace(/\D/g, ""));
     return (
-      basic.fullName.trim() &&
+      Boolean((basic.fullName || "").trim()) &&
       phoneOk &&
       emailOk &&
-      basic.dob.trim() &&
-      basic.instruments.trim() &&
-      basic.city.trim() &&
-      basic.pincode.trim()
+      Boolean((basic.city || "").trim()) &&
+      Boolean((basic.pincode || "").trim())
     );
   }, [basic]);
+
 
 
 
@@ -220,19 +219,25 @@ export default function App() {
   };
 
   const onNext = () => {
+    // If we're on Basic Info step (step === 1) validate and show error
     if (step === 1 && !basicValid) {
       setError("⚠️ Please fill out all required fields before continuing.");
+      // optional: scroll to top of form so error is visible
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+
+    // clear any previous error before advancing
+    setError("");
 
     if (step === totalSteps - 1) {
       submit();
     } else {
-      setError(""); // clear previous error
       setStep((s) => Math.min(s + 1, totalSteps - 1));
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
+
 
 
 
@@ -443,7 +448,9 @@ export default function App() {
                 </div>
               </Section>
               {error && (
-                <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
+                <p className="mt-4 text-sm font-semibold text-rose-600 text-center">
+                  {error}
+                </p>
               )}
 
               <StepNav
@@ -451,7 +458,7 @@ export default function App() {
                 total={totalSteps}
                 onBack={onBack}
                 onNext={onNext}
-                canNext={canNext}
+                canNext={true}   // ✅ always clickable
                 submitting={submitting}
               />
             </motion.div>
