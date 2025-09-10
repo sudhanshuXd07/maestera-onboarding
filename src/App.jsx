@@ -151,20 +151,21 @@ export default function App() {
     });
   };
 
- 
-const basicValid = useMemo(() => {
-  const emailOk = /\S+@\S+\.\S+/.test(basic.email);
-  const phoneOk = /^[0-9]{7,}$/.test(basic.phone);
-  return (
-    basic.fullName.trim() &&
-    phoneOk &&
-    emailOk &&
-    basic.dob.trim() &&
-    basic.instruments.trim() &&
-    basic.city.trim() &&
-    basic.pincode.trim()
-  );
-}, [basic]);
+
+  const basicValid = useMemo(() => {
+    const emailOk = /\S+@\S+\.\S+/.test(basic.email);
+    const phoneOk = /^[0-9]{7,}$/.test(basic.phone);
+    return (
+      basic.fullName.trim() &&
+      phoneOk &&
+      emailOk &&
+      basic.dob.trim() &&
+      basic.instruments.trim() &&
+      basic.city.trim() &&
+      basic.pincode.trim()
+    );
+  }, [basic]);
+
 
 
   const canNext = useMemo(() => {
@@ -219,19 +220,20 @@ const basicValid = useMemo(() => {
   };
 
   const onNext = () => {
-  if (step === 1 && !basicValid) {
-    setError("⚠️ Please fill out all required fields before continuing.");
-    return;
-  }
+    if (step === 1 && !basicValid) {
+      setError("⚠️ Please fill out all required fields before continuing.");
+      return;
+    }
 
-  if (step === totalSteps - 1) {
-    submit();
-  } else {
-    setError(""); // clear any previous error
-    setStep((s) => Math.min(s + 1, totalSteps - 1));
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-};
+    if (step === totalSteps - 1) {
+      submit();
+    } else {
+      setError(""); // clear previous error
+      setStep((s) => Math.min(s + 1, totalSteps - 1));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
 
 
   const onBack = () => {
@@ -440,6 +442,9 @@ const basicValid = useMemo(() => {
                   </Field>
                 </div>
               </Section>
+              {error && (
+                <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
+              )}
 
               <StepNav
                 step={step}
