@@ -275,9 +275,7 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
               className="w-full max-w-3xl mx-auto text-center"
             >
-              <h2 className="text-3xl font-semibold text-neutral-900">
-                Thank you! 🎶
-              </h2>
+              
               <p className="mt-3 text-neutral-700">
                 Thank you for the response
               </p>
@@ -371,7 +369,7 @@ export default function App() {
             >
               <Section
                 title="Basic Information"
-                subtitle="Tell us how to reach you and what you teach."
+                
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Field label="Full Name" required>
