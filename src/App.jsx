@@ -8,7 +8,7 @@ import logo from "./assets/logomaestera.jpeg";
  * Storage: posts JSON (proxied via /api/submit)
  */
 
-const SHEETS_SCRIPT_URL = "/api/submit"; 
+const SHEETS_SCRIPT_URL = "/api/submit";
 
 const brand = {
   black: "#0a0a0a",
@@ -236,7 +236,7 @@ export default function App() {
             />
           </div>
 
-          
+
         </div>
       </header>
 
@@ -255,10 +255,10 @@ export default function App() {
                 Thank you! 🎶
               </h2>
               <p className="mt-3 text-neutral-700">
-                Thank you for the response 
+                Thank you for the response
               </p>
               <p className="mt-3 text-neutral-700">
-                 We will be in touch soon!
+                We will be in touch soon!
               </p>
               <div className="mt-8">
                 <button
@@ -287,7 +287,7 @@ export default function App() {
                     });
                   }}
                 >
-                  
+
                 </button>
               </div>
             </motion.div>
@@ -310,11 +310,13 @@ export default function App() {
                   </p>
 
                   <p className="mt-4 text-neutral-700 leading-relaxed">
-                    While our core focus is helping students learn and grow, we know that many teachers also share their art through performances. By being part of Maestera, you’ll have the chance to showcase not only your teaching but also your performing side — opening up opportunities with students, families, and event organizers alike.
+                    While our core focus is helping students learn and grow, we know that many teachers also share their art through performances.
                   </p>
-
                   <p className="mt-4 text-neutral-700 leading-relaxed">
-                    This quick form will take just 30–60 seconds to complete.
+                    By being part of Maestera, you’ll have the chance to <strong>showcase not only your teaching but also your performing side </strong>— opening up opportunities with students, families, and event organizers alike.
+                  </p>
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    This quick form will take just <strong>30–60 seconds to complete.</strong>
                   </p>
 
                   <p className="mt-4 text-neutral-700 leading-relaxed">
@@ -431,14 +433,14 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
             >
               <Section
-                title="Your Preferences"
-                subtitle="Select the options that best describe you."
+                title="How you'd like to engage with Maestera"
+                
               >
                 <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
                   {/* Association */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you like to associate with Maestera for teaching, performances, or both? (any one)
+                      Would you like to associate for teaching, performances, or both? 
                     </div>
                     <div className="grid sm:grid-cols-3 gap-3">
                       {["Education/Teaching", "Performances", "Both"].map((v) => (
@@ -482,7 +484,7 @@ export default function App() {
                   {/* Exams */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Do you provide, or open to providing, training for any of these exams? 
+                      Do you provide, or open to providing, training for any of these exams?
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
@@ -501,7 +503,7 @@ export default function App() {
                   {/* Additional formats */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which additional formats would you like to be involved in with Maestera? 
+                      Which additional formats would you like to be involved in with Maestera?
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {[
@@ -526,7 +528,7 @@ export default function App() {
                   {/* Learner groups */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which of these learner groups are you confident in teaching? 
+                      Which of these learner groups are you confident in teaching?
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
@@ -543,7 +545,7 @@ export default function App() {
                   {/* Performance settings */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Please select the performance settings you are currently active in (or open to exploring)
+                      Please select the performance settings you are currently active in, or open to exploring?
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {[
