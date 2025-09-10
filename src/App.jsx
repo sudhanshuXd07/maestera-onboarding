@@ -19,7 +19,7 @@ const brand = {
 const Section = ({ title, subtitle, children }) => (
   <div className="w-full max-w-3xl mx-auto">
     {/* Title centered with vertical red line */}
-    <div className="flex justify-center items-center mb-2 text-center">
+    <div className="flex items-center mb-2 ">
       <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
       <h2 className="text-2xl font-semibold text-[#0a0a0a] tracking-tight">
         {title}
@@ -346,8 +346,7 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
             >
               <Section
-                title="Basic Information"
-                subtitle="Tell us how to reach you and what you teach."
+                title="Basic Information"   
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Field label="Full Name" required>
