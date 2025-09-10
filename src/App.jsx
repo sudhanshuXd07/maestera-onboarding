@@ -415,7 +415,7 @@ export default function App() {
                   </Field>
                   <Field label="Instruments you teach or play" required>
                     <Input
-                      placeholder="e.g., Tabla, Guitar, Piano"
+                      placeholder="e.g. Tabla, Guitar, Piano"
                       value={basic.instruments}
                       onChange={(e) =>
                         setBasic({ ...basic, instruments: e.target.value })
@@ -425,7 +425,7 @@ export default function App() {
                   </Field>
                   <Field label="Current City" required>
                     <Input
-                      placeholder="e.g., Mumbai"
+                      placeholder="e.g. Mumbai"
                       value={basic.city}
                       onChange={(e) =>
                         setBasic({ ...basic, city: e.target.value })
@@ -435,7 +435,7 @@ export default function App() {
                   </Field>
                   <Field label="Pincode" required>
                     <Input
-                      placeholder="e.g., 400001"
+                      placeholder="e.g. 400001"
                       value={basic.pincode}
                       onChange={(e) =>
                         setBasic({ ...basic, pincode: e.target.value })
