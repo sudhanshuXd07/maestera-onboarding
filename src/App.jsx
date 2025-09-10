@@ -38,9 +38,6 @@ const Section = ({ title, subtitle, children }) => (
   </div>
 );
 
-
-
-
 const Field = ({ label, required, children }) => (
   <label className="block">
     <span className="text-sm font-medium text-neutral-800">
@@ -239,10 +236,7 @@ export default function App() {
             />
           </div>
 
-          {/* Right text */}
-          <div className="text-white text-lg font-medium">
-            Maestera • Made with ♫
-          </div>
+          
         </div>
       </header>
 
@@ -261,10 +255,10 @@ export default function App() {
                 Thank you! 🎶
               </h2>
               <p className="mt-3 text-neutral-700">
-                Your details have been submitted. 
+                Thank you for the response 
               </p>
               <p className="mt-3 text-neutral-700">
-                 We will be in touch soon.
+                 We will be in touch soon!
               </p>
               <div className="mt-8">
                 <button
@@ -293,7 +287,7 @@ export default function App() {
                     });
                   }}
                 >
-                  Fill another response
+                  
                 </button>
               </div>
             </motion.div>
@@ -312,7 +306,7 @@ export default function App() {
                   </h1>
 
                   <p className="mt-6 text-neutral-700 leading-relaxed">
-                    Thank you for your passion for music and for contacting Maestera — India’s most flexible and inclusive platform for musicians.
+                    Thank you for your passion for music and for contacting <strong>Maestera — India’s most flexible and inclusive platform for musicians</strong>.
                   </p>
 
                   <p className="mt-4 text-neutral-700 leading-relaxed">
