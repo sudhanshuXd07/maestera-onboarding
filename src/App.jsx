@@ -18,7 +18,7 @@ const brand = {
 
 const Section = ({ title, subtitle, children }) => (
   <div className="w-full max-w-3xl mx-auto">
-    {/* Title centered with red line */}
+    
     <div className="flex justify-center items-center mb-2">
       <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
       <h2 className="text-2xl font-semibold text-[#0a0a0a] tracking-tight">
@@ -26,12 +26,12 @@ const Section = ({ title, subtitle, children }) => (
       </h2>
     </div>
 
-    {/* Subtitle left aligned */}
+    
     {subtitle && (
       <p className="mt-1 text-sm text-neutral-600 text-left">{subtitle}</p>
     )}
 
-    {/* Content left aligned */}
+    
     <div className="mt-5 space-y-4">{children}</div>
   </div>
 );
