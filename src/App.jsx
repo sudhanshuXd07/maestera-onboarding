@@ -346,7 +346,8 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
             >
               <Section
-                title="Basic Information"   
+                title="Basic Information"
+                subtitle="Tell us how to reach you and what you teach."
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Field label="Full Name" required>
@@ -356,6 +357,7 @@ export default function App() {
                       onChange={(e) =>
                         setBasic({ ...basic, fullName: e.target.value })
                       }
+                      required
                     />
                   </Field>
                   <Field label="Phone Number" required>
@@ -365,6 +367,7 @@ export default function App() {
                       onChange={(e) =>
                         setBasic({ ...basic, phone: e.target.value })
                       }
+                      required
                     />
                   </Field>
                   <Field label="Email" required>
@@ -375,24 +378,27 @@ export default function App() {
                       onChange={(e) =>
                         setBasic({ ...basic, email: e.target.value })
                       }
+                      required
                     />
                   </Field>
-                  <Field label="Date of Birth">
+                  <Field label="Date of Birth" required>
                     <Input
                       type="date"
                       value={basic.dob}
                       onChange={(e) =>
                         setBasic({ ...basic, dob: e.target.value })
                       }
+                      required
                     />
                   </Field>
-                  <Field label="Instruments you teach or play">
+                  <Field label="Instruments you teach or play" required>
                     <Input
                       placeholder="e.g., Tabla, Guitar, Piano"
                       value={basic.instruments}
                       onChange={(e) =>
                         setBasic({ ...basic, instruments: e.target.value })
                       }
+                      required
                     />
                   </Field>
                   <Field label="Current City" required>
@@ -402,6 +408,7 @@ export default function App() {
                       onChange={(e) =>
                         setBasic({ ...basic, city: e.target.value })
                       }
+                      required
                     />
                   </Field>
                   <Field label="Pincode" required>
@@ -411,10 +418,12 @@ export default function App() {
                       onChange={(e) =>
                         setBasic({ ...basic, pincode: e.target.value })
                       }
+                      required
                     />
                   </Field>
                 </div>
               </Section>
+
               <StepNav
                 step={step}
                 total={totalSteps}
@@ -433,13 +442,13 @@ export default function App() {
             >
               <Section
                 title="How you'd like to engage with Maestera"
-                
+
               >
                 <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
                   {/* Association */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you like to associate for teaching, performances, or both? 
+                      Would you like to associate for teaching, performances, or both?
                     </div>
                     <div className="grid sm:grid-cols-3 gap-3">
                       {["Education/Teaching", "Performances", "Both"].map((v) => (
