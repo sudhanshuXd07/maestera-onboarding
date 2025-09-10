@@ -151,11 +151,21 @@ export default function App() {
     });
   };
 
-  const basicValid = useMemo(() => {
-    const emailOk = /\S+@\S+\.\S+/.test(basic.email);
-    const phoneOk = /[0-9]{7,}/.test(basic.phone);
-    return basic.fullName && phoneOk && emailOk && basic.city && basic.pincode;
-  }, [basic]);
+ 
+const basicValid = useMemo(() => {
+  const emailOk = /\S+@\S+\.\S+/.test(basic.email);
+  const phoneOk = /^[0-9]{7,}$/.test(basic.phone);
+  return (
+    basic.fullName.trim() &&
+    phoneOk &&
+    emailOk &&
+    basic.dob.trim() &&
+    basic.instruments.trim() &&
+    basic.city.trim() &&
+    basic.pincode.trim()
+  );
+}, [basic]);
+
 
   const canNext = useMemo(() => {
     if (step === 0) return true;
@@ -209,13 +219,20 @@ export default function App() {
   };
 
   const onNext = () => {
-    if (step === totalSteps - 1) {
-      submit();
-    } else {
-      setStep((s) => Math.min(s + 1, totalSteps - 1));
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
+  if (step === 1 && !basicValid) {
+    setError("⚠️ Please fill out all required fields before continuing.");
+    return;
+  }
+
+  if (step === totalSteps - 1) {
+    submit();
+  } else {
+    setError(""); // clear any previous error
+    setStep((s) => Math.min(s + 1, totalSteps - 1));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+};
+
 
   const onBack = () => {
     setStep((s) => Math.max(s - 1, 0));
@@ -362,7 +379,7 @@ export default function App() {
                   </Field>
                   <Field label="Phone Number" required>
                     <Input
-                      placeholder="e.g., 9876543210"
+                      placeholder="e.g. 9876543210"
                       value={basic.phone}
                       onChange={(e) =>
                         setBasic({ ...basic, phone: e.target.value })
