@@ -256,7 +256,7 @@ export default function App() {
             <img
               src={logo}
               alt="Maestera Logo"
-              className="h-40 object-contain"
+              className="h-50 object-contain"
             />
           </div>
 
