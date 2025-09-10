@@ -289,16 +289,28 @@ export default function App() {
               className="w-full max-w-3xl mx-auto"
             >
               <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-                <div className="p-8">
-                  <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
-                    Welcome to Maestera
-                  </h1>
-                  <p className="mt-4 text-neutral-700 leading-relaxed">
-                    Thank you for your passion for music and for joining Maestera — India’s most flexible and inclusive platform for music education. While our core focus is helping students learn and grow, we know that many teachers also share their art through performances. By being part of Maestera, you’ll have the chance to showcase not only your teaching but also your performing side — opening up opportunities with students, families, and event organizers alike.
-                  </p>
-                  <p className="mt-4 text-neutral-700">
-                    This quick form will take just 30–60 seconds to complete. It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
-                  </p>
+                <div className="p-8 text-center">
+  <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
+    Welcome to Maestera
+  </h1>
+  
+  <p className="mt-6 text-neutral-700 leading-relaxed">
+    Thank you for your passion for music and for contacting Maestera — India’s most flexible and inclusive platform for musicians.
+  </p>
+
+  <p className="mt-4 text-neutral-700 leading-relaxed">
+    While our core focus is helping students learn and grow, we know that many teachers also share their art through performances. By being part of Maestera, you’ll have the chance to showcase not only your teaching but also your performing side — opening up opportunities with students, families, and event organizers alike.
+  </p>
+
+  <p className="mt-4 text-neutral-700 leading-relaxed">
+    This quick form will take just 30–60 seconds to complete.
+  </p>
+
+  <p className="mt-4 text-neutral-700 leading-relaxed">
+    It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
+  </p>
+
+
                 </div>
                 <div className="h-1 w-full bg-rose-600" />
                 <div className="p-6 flex items-center justify-between">
