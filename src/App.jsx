@@ -17,11 +17,13 @@ const brand = {
 };
 
 const Section = ({ title, subtitle, children }) => (
-  <div className="w-full max-w-3xl mx-auto">
-    <h2 className="text-2xl font-semibold text-[#0a0a0a] tracking-tight flex items-baseline gap-3">
-      <span className="inline-block h-6 w-1 rounded bg-rose-600" />
-      {title}
-    </h2>
+  <div className="w-full max-w-3xl mx-auto text-center">
+    <div className="flex justify-center items-center mb-2">
+      <span className="inline-block h-6 w-1 content-center rounded bg-rose-600 mr-2" />
+      <h2 className="text-2xl text-center font-semibold text-[#0a0a0a] tracking-tight">
+        {title}
+      </h2>
+    </div>
     {subtitle && <p className="mt-1 text-sm text-neutral-600">{subtitle}</p>}
     <div className="mt-5 space-y-4">{children}</div>
   </div>
@@ -213,24 +215,24 @@ export default function App() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
-    
-      <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        {/* Left + Mid (logo shifted a bit left) */}
-        <div className="flex items-center gap-4 flex-grow">
-          <img
-            src={logo}
-            alt="Maestera Logo"
-            className="h-40 object-contain"
-          />
-        </div>
 
-        {/* Right text */}
-        <div className="text-white text-lg font-medium">
-          All Things Music
+      <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          {/* Left + Mid (logo shifted a bit left) */}
+          <div className="flex items-center gap-4 flex-grow">
+            <img
+              src={logo}
+              alt="Maestera Logo"
+              className="h-40 object-contain"
+            />
+          </div>
+
+          {/* Right text */}
+          <div className="text-white text-lg font-medium">
+            All Things Music
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
 
       {/* Content */}
       <main className="max-w-5xl mx-auto px-6 py-10">
@@ -290,25 +292,25 @@ export default function App() {
             >
               <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
                 <div className="p-8 text-center">
-  <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
-    Welcome to Maestera
-  </h1>
-  
-  <p className="mt-6 text-neutral-700 leading-relaxed">
-    Thank you for your passion for music and for contacting Maestera — India’s most flexible and inclusive platform for musicians.
-  </p>
+                  <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
+                    Welcome to Maestera
+                  </h1>
 
-  <p className="mt-4 text-neutral-700 leading-relaxed">
-    While our core focus is helping students learn and grow, we know that many teachers also share their art through performances. By being part of Maestera, you’ll have the chance to showcase not only your teaching but also your performing side — opening up opportunities with students, families, and event organizers alike.
-  </p>
+                  <p className="mt-6 text-neutral-700 leading-relaxed">
+                    Thank you for your passion for music and for contacting Maestera — India’s most flexible and inclusive platform for musicians.
+                  </p>
 
-  <p className="mt-4 text-neutral-700 leading-relaxed">
-    This quick form will take just 30–60 seconds to complete.
-  </p>
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    While our core focus is helping students learn and grow, we know that many teachers also share their art through performances. By being part of Maestera, you’ll have the chance to showcase not only your teaching but also your performing side — opening up opportunities with students, families, and event organizers alike.
+                  </p>
 
-  <p className="mt-4 text-neutral-700 leading-relaxed">
-    It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
-  </p>
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    This quick form will take just 30–60 seconds to complete.
+                  </p>
+
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
+                  </p>
 
 
                 </div>
