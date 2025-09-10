@@ -261,7 +261,10 @@ export default function App() {
                 Thank you! 🎶
               </h2>
               <p className="mt-3 text-neutral-700">
-                Your details have been submitted. We'll be in touch soon.
+                Your details have been submitted. 
+              </p>
+              <p className="mt-3 text-neutral-700">
+                 We will be in touch soon.
               </p>
               <div className="mt-8">
                 <button
