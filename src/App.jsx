@@ -8,7 +8,7 @@ import logo from "./assets/logomaestera.jpeg";
  * Storage: posts JSON (proxied via /api/submit)
  */
 
-const SHEETS_SCRIPT_URL = "/api/submit"; // change to direct Google Script URL if you prefer
+const SHEETS_SCRIPT_URL = "/api/submit"; 
 
 const brand = {
   black: "#0a0a0a",
@@ -18,23 +18,26 @@ const brand = {
 
 const Section = ({ title, subtitle, children }) => (
   <div className="w-full max-w-3xl mx-auto">
-    
-    <div className="flex justify-center items-center mb-2">
+    {/* Title centered with vertical red line */}
+    <div className="flex justify-center items-center mb-2 text-center">
       <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
       <h2 className="text-2xl font-semibold text-[#0a0a0a] tracking-tight">
         {title}
       </h2>
     </div>
 
-    
+    {/* Subtitle left aligned */}
     {subtitle && (
-      <p className="mt-1 text-sm text-neutral-600 text-left">{subtitle}</p>
+      <div className="w-full text-left">
+        <p className="mt-1 text-sm text-neutral-600">{subtitle}</p>
+      </div>
     )}
 
-    
-    <div className="mt-5 space-y-4">{children}</div>
+    {/* Content left aligned */}
+    <div className="mt-5 space-y-4 text-left">{children}</div>
   </div>
 );
+
 
 
 
@@ -238,7 +241,7 @@ export default function App() {
 
           {/* Right text */}
           <div className="text-white text-lg font-medium">
-            All Things Music
+            Maestera • Made with ♫
           </div>
         </div>
       </header>
@@ -385,7 +388,7 @@ export default function App() {
                       }
                     />
                   </Field>
-                  <Field label="Instruments you teach & play">
+                  <Field label="Instruments you teach or play">
                     <Input
                       placeholder="e.g., Tabla, Guitar, Piano"
                       value={basic.instruments}
@@ -482,7 +485,7 @@ export default function App() {
                   {/* Exams */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Do you provide, or open to providing, training for any of these exams? (Multiple options can be selected)
+                      Do you provide, or open to providing, training for any of these exams? 
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
@@ -501,7 +504,7 @@ export default function App() {
                   {/* Additional formats */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which additional formats would you like to be involved in with Maestera? (Multiple options can be selected)
+                      Which additional formats would you like to be involved in with Maestera? 
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {[
@@ -526,7 +529,7 @@ export default function App() {
                   {/* Learner groups */}
                   <div>
                     <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which of these learner groups are you confident in teaching? (Multiple options can be selected)
+                      Which of these learner groups are you confident in teaching? 
                     </div>
                     <div className="grid sm:grid-cols-2 gap-3">
                       {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
