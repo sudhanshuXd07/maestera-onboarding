@@ -18,22 +18,17 @@ const brand = {
 
 const Section = ({ title, subtitle, children }) => (
   <div className="w-full max-w-3xl mx-auto">
-    {/* Title centered with vertical red line */}
-    <div className="flex items-center mb-2 ">
+    <div className="flex items-center mb-2">
       <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
       <h2 className="text-2xl font-semibold text-[#0a0a0a] tracking-tight">
         {title}
       </h2>
     </div>
-
-    {/* Subtitle left aligned */}
     {subtitle && (
       <div className="w-full text-left">
         <p className="mt-1 text-sm text-neutral-600">{subtitle}</p>
       </div>
     )}
-
-    {/* Content left aligned */}
     <div className="mt-5 space-y-4 text-left">{children}</div>
   </div>
 );
@@ -151,7 +146,6 @@ export default function App() {
     });
   };
 
-
   const basicValid = useMemo(() => {
     const emailOk = /\S+@\S+\.\S+/.test(basic.email || "");
     const phoneOk = /^[0-9]{7,}$/.test((basic.phone || "").replace(/\D/g, ""));
@@ -163,9 +157,6 @@ export default function App() {
       Boolean((basic.pincode || "").trim())
     );
   }, [basic]);
-
-
-
 
   const canNext = useMemo(() => {
     if (step === 0) return true;
@@ -206,30 +197,22 @@ export default function App() {
         throw new Error("Invalid JSON response from server");
       }
 
-      console.log("Response from API:", result);
-
       if (!res.ok) throw new Error(result.message || "Submission failed");
       setSubmitted(true);
     } catch (e) {
       setError("There was a problem submitting the form. Please try again.");
-      console.error("Submit error:", e);
     } finally {
       setSubmitting(false);
     }
   };
 
   const onNext = () => {
-    // If we're on Basic Info step (step === 1) validate and show error
     if (step === 1 && !basicValid) {
       setError("⚠️ Please fill out all required fields before continuing.");
-      // optional: scroll to top of form so error is visible
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-
-    // clear any previous error before advancing
     setError("");
-
     if (step === totalSteps - 1) {
       submit();
     } else {
@@ -238,9 +221,6 @@ export default function App() {
     }
   };
 
-
-
-
   const onBack = () => {
     setStep((s) => Math.max(s - 1, 0));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -248,23 +228,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
-
       <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          {/* Left + Mid (logo shifted a bit left) */}
           <div className="flex items-center gap-4 flex-grow">
-            <img
-              src={logo}
-              alt="Maestera Logo"
-              className="h-45 object-contain"
-            />
+            <img src={logo} alt="Maestera Logo" className="h-45 object-contain" />
           </div>
-
-
         </div>
       </header>
 
-      {/* Content */}
       <main className="max-w-5xl mx-auto px-6 py-10">
         <AnimatePresence mode="wait">
           {submitted ? (
@@ -275,202 +246,17 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
               className="w-full max-w-3xl mx-auto text-center"
             >
-              
-              <p className="mt-3 text-neutral-700">
-                Thank you for the response
-              </p>
-              <p className="mt-3 text-neutral-700">
-                We will be in touch soon!
-              </p>
-              <div className="mt-8">
-                <button
-                  className="px-6 py-2.5 rounded-xl text-white"
-                  style={{ backgroundColor: brand.black }}
-                  onClick={() => {
-                    setSubmitted(false);
-                    setStep(0);
-                    setBasic({
-                      fullName: "",
-                      phone: "",
-                      email: "",
-                      dob: "",
-                      instruments: "",
-                      city: "",
-                      pincode: "",
-                    });
-                    setAssoc("Education/Teaching");
-                    setMulti({
-                      classFormats: new Set(),
-                      exams: new Set(),
-                      additionalFormats: new Set(),
-                      learnerGroups: new Set(),
-                      performanceSettings: new Set(),
-                      collabProjects: new Set(),
-                    });
-                  }}
-                >
-
-                </button>
-              </div>
+              <p className="mt-3 text-neutral-700">Thank you for the response</p>
+              <p className="mt-3 text-neutral-700">We will be in touch soon!</p>
             </motion.div>
-          ) : step === 0 ? (
-            <motion.div
-              key="intro"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="w-full max-w-3xl mx-auto"
-            >
-              <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-                <div className="p-8 text-center">
-                  <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
-                    Welcome to Maestera
-                  </h1>
-
-                  <p className="mt-6 text-neutral-700 leading-relaxed">
-                    Thank you for your passion for music and for contacting <strong>Maestera — India’s most flexible and inclusive platform for musicians</strong>.
-                  </p>
-
-                  <p className="mt-4 text-neutral-700 leading-relaxed">
-                    While our core focus is helping students learn and grow, we know that many teachers also share their art through performances.
-                  </p>
-                  <p className="mt-4 text-neutral-700 leading-relaxed">
-                    By being part of Maestera, you’ll have the chance to <strong>showcase not only your teaching but also your performing side </strong>— opening up opportunities with students, families, and event organizers alike.
-                  </p>
-                  <p className="mt-4 text-neutral-700 leading-relaxed">
-                    This quick form will take just <strong>30–60 seconds to complete.</strong>
-                  </p>
-
-                  <p className="mt-4 text-neutral-700 leading-relaxed">
-                    It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
-                  </p>
-
-
-                </div>
-                <div className="h-1 w-full bg-rose-600" />
-                <div className="p-6 flex items-center justify-between">
-                  <div className="text-neutral-600 text-sm">Step 1 of {totalSteps}</div>
-                  <button
-                    className="px-6 py-2.5 rounded-xl text-white"
-                    style={{ backgroundColor: brand.black }}
-                    onClick={() => setStep(1)}
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          ) : step === 1 ? (
-            <motion.div
-              key="basic"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-            >
-              <Section
-                title="Basic Information"
-                
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <Field label="Full Name" required>
-                    <Input
-                      placeholder="Your full name"
-                      value={basic.fullName}
-                      onChange={(e) =>
-                        setBasic({ ...basic, fullName: e.target.value })
-                      }
-                      required
-                    />
-                  </Field>
-                  <Field label="Phone Number" required>
-                    <Input
-                      placeholder="e.g. 9876543210"
-                      value={basic.phone}
-                      onChange={(e) =>
-                        setBasic({ ...basic, phone: e.target.value })
-                      }
-                      required
-                    />
-                  </Field>
-                  <Field label="Email" required>
-                    <Input
-                      type="email"
-                      placeholder="you@example.com"
-                      value={basic.email}
-                      onChange={(e) =>
-                        setBasic({ ...basic, email: e.target.value })
-                      }
-                      required
-                    />
-                  </Field>
-                  <Field label="Date of Birth" required>
-                    <Input
-                      type="date"
-                      value={basic.dob}
-                      onChange={(e) =>
-                        setBasic({ ...basic, dob: e.target.value })
-                      }
-                      required
-                    />
-                  </Field>
-                  <Field label="Instruments you teach or play" required>
-                    <Input
-                      placeholder="e.g. Tabla, Guitar, Piano"
-                      value={basic.instruments}
-                      onChange={(e) =>
-                        setBasic({ ...basic, instruments: e.target.value })
-                      }
-                      required
-                    />
-                  </Field>
-                  <Field label="Current City" required>
-                    <Input
-                      placeholder="e.g. Mumbai"
-                      value={basic.city}
-                      onChange={(e) =>
-                        setBasic({ ...basic, city: e.target.value })
-                      }
-                      required
-                    />
-                  </Field>
-                  <Field label="Pincode" required>
-                    <Input
-                      placeholder="e.g. 400001"
-                      value={basic.pincode}
-                      onChange={(e) =>
-                        setBasic({ ...basic, pincode: e.target.value })
-                      }
-                      required
-                    />
-                  </Field>
-                </div>
-              </Section>
-              {error && (
-                <p className="mt-4 text-sm font-semibold text-rose-600 text-center">
-                  {error}
-                </p>
-              )}
-
-              <StepNav
-                step={step}
-                total={totalSteps}
-                onBack={onBack}
-                onNext={onNext}
-                canNext={true}   // ✅ always clickable
-                submitting={submitting}
-              />
-            </motion.div>
-          ) : (
+          ) : step === 2 ? (
             <motion.div
               key="multi"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-              <Section
-                title="How you'd like to engage with Maestera"
-
-              >
+              <Section title="How you'd like to engage with Maestera">
                 <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
                   {/* Association */}
                   <div>
@@ -491,153 +277,151 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Class formats */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      What class formats do you currently teach or would be open to? (Multiple options can be selected)
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Individual classes - Online",
-                        "Individual Classes - Teacher's Place",
-                        "Individual Classes - Student's Place",
-                        "Group classes - Online",
-                        "Group Classes - Teacher's Place",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.classFormats.has(label)}
-                          onChange={() => toggle("classFormats", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  {/* Conditional questions */}
+                  {(assoc === "Education/Teaching" || assoc === "Both") && (
+                    <>
+                      {/* Class formats */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          What class formats do you currently teach or would be open to? (Multiple options can be selected)
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {[
+                            "Individual classes - Online",
+                            "Individual Classes - Teacher's Place",
+                            "Individual Classes - Student's Place",
+                            "Group classes - Online",
+                            "Group Classes - Teacher's Place",
+                            "None of the above - I don't teach",
+                            "Other",
+                          ].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.classFormats.has(label)}
+                              onChange={() => toggle("classFormats", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
 
-                  {/* Exams */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Do you provide, or open to providing, training for any of these exams?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
-                        (label) => (
-                          <Checkbox
-                            key={label}
-                            label={label}
-                            checked={multi.exams.has(label)}
-                            onChange={() => toggle("exams", label)}
-                          />
-                        )
-                      )}
-                    </div>
-                  </div>
+                      {/* Exams */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Do you provide, or open to providing, training for any of these exams?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
+                            (label) => (
+                              <Checkbox
+                                key={label}
+                                label={label}
+                                checked={multi.exams.has(label)}
+                                onChange={() => toggle("exams", label)}
+                              />
+                            )
+                          )}
+                        </div>
+                      </div>
 
-                  {/* Additional formats */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which additional formats would you like to be involved in with Maestera?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Certificate Courses",
-                        "Workshops",
-                        "Masterclass",
-                        "Teach/Work at educational institutions",
-                        "Online classes - Students residing abroad",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.additionalFormats.has(label)}
-                          onChange={() => toggle("additionalFormats", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                      {/* Additional formats */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Which additional formats would you like to be involved in with Maestera?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {[
+                            "Certificate Courses",
+                            "Workshops",
+                            "Masterclass",
+                            "Teach/Work at educational institutions",
+                            "Online classes - Students residing abroad",
+                            "None of the above - I don't teach",
+                            "Other",
+                          ].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.additionalFormats.has(label)}
+                              onChange={() => toggle("additionalFormats", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
 
-                  {/* Learner groups */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which of these learner groups are you confident in teaching?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.learnerGroups.has(label)}
-                          onChange={() => toggle("learnerGroups", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                      {/* Learner groups */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Which of these learner groups are you confident in teaching?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.learnerGroups.has(label)}
+                              onChange={() => toggle("learnerGroups", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
 
-                  {/* Performance settings */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Please select the performance settings you are currently active in, or open to exploring?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Corporates",
-                        "Restaurants/Hotels/Cafes",
-                        "Social gatherings",
-                        "Weddings",
-                        "Cultural events",
-                        "Religious",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.performanceSettings.has(label)}
-                          onChange={() => toggle("performanceSettings", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  {(assoc === "Performances" || assoc === "Both") && (
+                    <>
+                      {/* Performance settings */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Please select the performance settings you are currently active in, or open to exploring?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {[
+                            "Corporates",
+                            "Restaurants/Hotels/Cafes",
+                            "Social gatherings",
+                            "Weddings",
+                            "Cultural events",
+                            "Religious",
+                          ].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.performanceSettings.has(label)}
+                              onChange={() => toggle("performanceSettings", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
 
-                  {/* Collab projects */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you be open to participating in collaborative music projects such as the following?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.collabProjects.has(label)}
-                          onChange={() => toggle("collabProjects", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                      {/* Collab projects */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Would you be open to participating in collaborative music projects such as the following?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.collabProjects.has(label)}
+                              onChange={() => toggle("collabProjects", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </Section>
 
-              {error && (
-                <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
-              )}
-
-              <StepNav
-                step={step}
-                total={totalSteps}
-                onBack={onBack}
-                onNext={onNext}
-                canNext={canNext}
-                submitting={submitting}
-              />
+              {error && <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>}
+              <StepNav step={step} total={totalSteps} onBack={onBack} onNext={onNext} canNext={canNext} submitting={submitting} />
             </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </main>
 
-      {/* Footer */}
       <footer className="mt-16">
         <div className="h-[5px] w-full bg-rose-600" />
         <div className="py-6 text-center text-xs text-neutral-600">
