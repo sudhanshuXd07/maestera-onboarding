@@ -151,7 +151,6 @@ export default function App() {
     });
   };
 
-
   const basicValid = useMemo(() => {
     const emailOk = /\S+@\S+\.\S+/.test(basic.email || "");
     const phoneOk = /^[0-9]{7,}$/.test((basic.phone || "").replace(/\D/g, ""));
@@ -163,9 +162,6 @@ export default function App() {
       Boolean((basic.pincode || "").trim())
     );
   }, [basic]);
-
-
-
 
   const canNext = useMemo(() => {
     if (step === 0) return true;
@@ -238,9 +234,6 @@ export default function App() {
     }
   };
 
-
-
-
   const onBack = () => {
     setStep((s) => Math.max(s - 1, 0));
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -256,7 +249,7 @@ export default function App() {
             <img
               src={logo}
               alt="Maestera Logo"
-              className="h-45 object-contain"
+              className="h-40 object-contain"
             />
           </div>
 
@@ -275,7 +268,9 @@ export default function App() {
               exit={{ opacity: 0, y: -8 }}
               className="w-full max-w-3xl mx-auto text-center"
             >
-              
+              <h2 className="text-3xl font-semibold text-neutral-900">
+                Thank you! 🎶
+              </h2>
               <p className="mt-3 text-neutral-700">
                 Thank you for the response
               </p>
@@ -369,7 +364,7 @@ export default function App() {
             >
               <Section
                 title="Basic Information"
-                
+
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Field label="Full Name" required>
@@ -491,132 +486,142 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Class formats */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      What class formats do you currently teach or would be open to? (Multiple options can be selected)
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Individual classes - Online",
-                        "Individual Classes - Teacher's Place",
-                        "Individual Classes - Student's Place",
-                        "Group classes - Online",
-                        "Group Classes - Teacher's Place",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.classFormats.has(label)}
-                          onChange={() => toggle("classFormats", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  {/* CONDITIONAL: Education/Teaching OR Both */}
+                  {(assoc === "Education/Teaching" || assoc === "Both") && (
+                    <>
+                      {/* Class formats */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          What class formats do you currently teach or would be open to? (Multiple options can be selected)
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {[
+                            "Individual classes - Online",
+                            "Individual Classes - Teacher's Place",
+                            "Individual Classes - Student's Place",
+                            "Group classes - Online",
+                            "Group Classes - Teacher's Place",
+                            "None of the above - I don't teach",
+                            "Other",
+                          ].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.classFormats.has(label)}
+                              onChange={() => toggle("classFormats", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
 
-                  {/* Exams */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Do you provide, or open to providing, training for any of these exams?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
-                        (label) => (
-                          <Checkbox
-                            key={label}
-                            label={label}
-                            checked={multi.exams.has(label)}
-                            onChange={() => toggle("exams", label)}
-                          />
-                        )
-                      )}
-                    </div>
-                  </div>
+                      {/* Exams */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Do you provide, or open to providing, training for any of these exams?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
+                            (label) => (
+                              <Checkbox
+                                key={label}
+                                label={label}
+                                checked={multi.exams.has(label)}
+                                onChange={() => toggle("exams", label)}
+                              />
+                            )
+                          )}
+                        </div>
+                      </div>
 
-                  {/* Additional formats */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which additional formats would you like to be involved in with Maestera?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Certificate Courses",
-                        "Workshops",
-                        "Masterclass",
-                        "Teach/Work at educational institutions",
-                        "Online classes - Students residing abroad",
-                        "None of the above - I don't teach",
-                        "Other",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.additionalFormats.has(label)}
-                          onChange={() => toggle("additionalFormats", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                      {/* Additional formats */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Which additional formats would you like to be involved in with Maestera?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {[
+                            "Certificate Courses",
+                            "Workshops",
+                            "Masterclass",
+                            "Teach/Work at educational institutions",
+                            "Online classes - Students residing abroad",
+                            "None of the above - I don't teach",
+                            "Other",
+                          ].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.additionalFormats.has(label)}
+                              onChange={() => toggle("additionalFormats", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
 
-                  {/* Learner groups */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Which of these learner groups are you confident in teaching?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.learnerGroups.has(label)}
-                          onChange={() => toggle("learnerGroups", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                      {/* Learner groups */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Which of these learner groups are you confident in teaching?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.learnerGroups.has(label)}
+                              onChange={() => toggle("learnerGroups", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
 
-                  {/* Performance settings */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Please select the performance settings you are currently active in, or open to exploring?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {[
-                        "Corporates",
-                        "Restaurants/Hotels/Cafes",
-                        "Social gatherings",
-                        "Weddings",
-                        "Cultural events",
-                        "Religious",
-                      ].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.performanceSettings.has(label)}
-                          onChange={() => toggle("performanceSettings", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                  {/* CONDITIONAL: Performances OR Both */}
+                  {(assoc === "Performances" || assoc === "Both") && (
+                    <>
+                      {/* Performance settings */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Please select the performance settings you are currently active in, or open to exploring?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {[
+                            "Corporates",
+                            "Restaurants/Hotels/Cafes",
+                            "Social gatherings",
+                            "Weddings",
+                            "Cultural events",
+                            "Religious",
+                          ].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.performanceSettings.has(label)}
+                              onChange={() => toggle("performanceSettings", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
 
-                  {/* Collab projects */}
-                  <div>
-                    <div className="text-sm font-semibold text-neutral-900 mb-3">
-                      Would you be open to participating in collaborative music projects such as the following?
-                    </div>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.collabProjects.has(label)}
-                          onChange={() => toggle("collabProjects", label)}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                      {/* Collab projects */}
+                      <div>
+                        <div className="text-sm font-semibold text-neutral-900 mb-3">
+                          Would you be open to participating in collaborative music projects such as the following?
+                        </div>
+                        <div className="grid sm:grid-cols-2 gap-3">
+                          {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+                            <Checkbox
+                              key={label}
+                              label={label}
+                              checked={multi.collabProjects.has(label)}
+                              onChange={() => toggle("collabProjects", label)}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </Section>
 
