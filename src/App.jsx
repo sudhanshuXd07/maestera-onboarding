@@ -462,10 +462,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-              <Section
-                title="How you'd like to engage with Maestera"
-
-              >
+              <Section title="How you'd like to engage with Maestera">
                 <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
                   {/* Association */}
                   <div>
@@ -479,7 +476,7 @@ export default function App() {
                           name="assoc"
                           value={v}
                           current={assoc}
-                          onChange={setAssoc}
+                          onChange={(val) => setAssoc(val)}   // ✅ make sure assoc updates correctly
                           label={v}
                         />
                       ))}
@@ -624,6 +621,7 @@ export default function App() {
                   )}
                 </div>
               </Section>
+
 
               {error && (
                 <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
