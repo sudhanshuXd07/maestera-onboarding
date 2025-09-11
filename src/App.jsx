@@ -464,11 +464,12 @@ export default function App() {
             >
               <Section title="How you'd like to engage with Maestera?">
                 {/* First Card - Association */}
-                <div className="bg-white border border-neutral-200 rounded-2xl p-6 mb-6">
-                  <div className="text-sm font-semibold text-neutral-900 mb-3">
-                    
-                  </div>
-                  <div className="flex gap-4">
+               
+                <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    How you'd like to engage with Maestera?
+                  </h2>
+                  <div className="flex gap-6">
                     {["Education/Teaching", "Performances", "Both"].map((v) => (
                       <Radio
                         key={v}
