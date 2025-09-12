@@ -466,9 +466,12 @@ export default function App() {
                 {/* First Card - Association */}
 
                 <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
-                  {/* Red-line heading inside the card */}
-                  <div className="text-lg font-semibold text-neutral-900 border-l-4 border-rose-500 pl-3">
-                    How you'd like to engage with Maestera?
+                  {/* Heading with red line INSIDE the card */}
+                  <div className="flex items-center mb-4">
+                    <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
+                    <h2 className="text-lg font-semibold text-neutral-900">
+                      How you'd like to engage with Maestera?
+                    </h2>
                   </div>
 
                   {/* Association radio buttons */}
@@ -485,6 +488,7 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+
 
 
                 {/* Second Card - Questions */}
