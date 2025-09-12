@@ -462,8 +462,7 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-              <Section >
-                {/* First Card - Association */}
+              
 
                 <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
                   {/* Heading with red line INSIDE the card */}
@@ -632,7 +631,7 @@ export default function App() {
                     )}
                   </div>
                 )}
-              </Section>
+             
 
 
               {error && (
