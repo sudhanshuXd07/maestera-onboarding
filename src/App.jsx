@@ -293,7 +293,7 @@ export default function App() {
 
                 {/* Instagram */}
                 <a
-                  href="https://instagram.com/yourpage" // replace with your IG link
+                  href="https://www.instagram.com/maestera.music?igsh=MWhocXIwa3d6cWQ0Nw==" // replace with your IG link
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-pink-500 text-4xl hover:scale-110 transition-transform"
