@@ -462,14 +462,16 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-              <Section title="How you'd like to engage with Maestera?">
+              <Section >
                 {/* First Card - Association */}
 
                 <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
+                  {/* Red-line heading inside the card */}
                   <div className="text-lg font-semibold text-neutral-900 border-l-4 border-rose-500 pl-3">
                     How you'd like to engage with Maestera?
                   </div>
 
+                  {/* Association radio buttons */}
                   <div className="flex gap-6">
                     {["Education/Teaching", "Performances", "Both"].map((v) => (
                       <Radio
@@ -483,6 +485,7 @@ export default function App() {
                     ))}
                   </div>
                 </div>
+
 
                 {/* Second Card - Questions */}
                 {assoc && (
