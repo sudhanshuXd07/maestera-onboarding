@@ -474,7 +474,7 @@ export default function App() {
                   </div>
 
                   {/* Association radio buttons */}
-                  <div className="flex gap-6">
+                  <div className="flex flex-wrap gap-6">
                     {["Education/Teaching", "Performances", "Both"].map((v) => (
                       <Radio
                         key={v}
