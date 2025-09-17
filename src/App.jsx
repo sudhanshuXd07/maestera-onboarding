@@ -318,7 +318,8 @@ export default function App() {
                   </h1>
 
                   <p className="mt-6 text-neutral-700 leading-relaxed">
-                    Thank you for your passion for music and for contacting <strong>Maestera — India’s most flexible and inclusive platform for musicians</strong>.
+                    Thank you for your passion for music and for contacting 
+                    <strong>Maestera — India’s most flexible and inclusive platform for musicians</strong>.
                   </p>
 
                   <p className="mt-4 text-neutral-700 leading-relaxed">
