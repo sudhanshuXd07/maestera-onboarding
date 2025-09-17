@@ -584,6 +584,21 @@ export default function App() {
                           </>
                         )}
 
+                        {/* Teaching Fee per Hour */}
+                        <div>
+                          <p className="font-medium text-neutral-900 mb-2">
+                            Teaching fee per hour
+                          </p>
+                          <Input
+                            type="number"
+                            placeholder="Fee's in ₹"
+                            value={basic.fee || ""}
+                            onChange={(e) =>
+                              setBasic({ ...basic, fee: e.target.value })
+                            }
+                          />
+                        </div>
+
                         {/* Performances OR Both */}
                         {(assoc === "Performances" || assoc === "Both") && (
                           <>
