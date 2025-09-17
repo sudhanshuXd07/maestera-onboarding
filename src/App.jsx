@@ -173,7 +173,13 @@ export default function App() {
 
   const payload = useMemo(
     () => ({
-      ...basic,
+      fullName: basic.fullName,
+      phone: basic.phone,
+      email: basic.email,
+      dob: basic.dob,
+      instruments: basic.instruments,
+      city: basic.city,
+      pincode: basic.pincode,
       association: assoc,
       classFormats: Array.from(multi.classFormats),
       exams: Array.from(multi.exams),
@@ -181,10 +187,13 @@ export default function App() {
       learnerGroups: Array.from(multi.learnerGroups),
       performanceSettings: Array.from(multi.performanceSettings),
       collabProjects: Array.from(multi.collabProjects),
+      teachingFee: basic.teachingFee || "",
+      performanceFee: basic.performanceFee || "",
       timestamp: new Date().toISOString(),
     }),
     [basic, assoc, multi]
   );
+
 
   const submit = async () => {
     setSubmitting(true);
