@@ -459,7 +459,7 @@ export default function App() {
             >
 
 
-              <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6">
+              <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
                 {/* Heading with red line INSIDE the card */}
                 <div className="flex items-center mb-4">
                   <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
