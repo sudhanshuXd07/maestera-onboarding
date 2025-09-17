@@ -171,28 +171,26 @@ export default function App() {
     return true;
   }, [step, basicValid]);
 
-  const payload = useMemo(
-    () => ({
-      fullName: basic.fullName,
-      phone: basic.phone,
-      email: basic.email,
-      dob: basic.dob,
-      instruments: basic.instruments,
-      city: basic.city,
-      pincode: basic.pincode,
-      association: assoc,
-      classFormats: Array.from(multi.classFormats),
-      exams: Array.from(multi.exams),
-      additionalFormats: Array.from(multi.additionalFormats),
-      learnerGroups: Array.from(multi.learnerGroups),
-      performanceSettings: Array.from(multi.performanceSettings),
-      collabProjects: Array.from(multi.collabProjects),
-      teachingFee: basic.teachingFee || "",
-      performanceFee: basic.performanceFee || "",
-      timestamp: new Date().toISOString(),
-    }),
-    [basic, assoc, multi]
-  );
+  const payload = useMemo(() => ({
+    fullName: basic.fullName,
+    phone: basic.phone,
+    email: basic.email,
+    dob: basic.dob,
+    instruments: basic.instruments,
+    city: basic.city,
+    pincode: basic.pincode,
+    association: assoc,
+    classFormats: Array.from(multi.classFormats),
+    exams: Array.from(multi.exams),
+    additionalFormats: Array.from(multi.additionalFormats),
+    learnerGroups: Array.from(multi.learnerGroups),
+    teachingFee: basic.teachingFee || "",
+    performanceSettings: Array.from(multi.performanceSettings),
+    collabProjects: Array.from(multi.collabProjects),
+    performanceFee: basic.performanceFee || "",
+    timestamp: new Date().toISOString(),
+  }), [basic, assoc, multi]);
+
 
 
   const submit = async () => {
