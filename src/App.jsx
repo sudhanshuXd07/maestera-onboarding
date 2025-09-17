@@ -489,7 +489,7 @@ export default function App() {
               {assoc && (
                 <div className="bg-white border border-neutral-300 rounded-2xl p-6 space-y-6">
                   {(() => {
-                    let q = 1; // start numbering at 1
+                    let q = 1; // reset numbering each time
 
                     return (
                       <>
@@ -501,7 +501,24 @@ export default function App() {
                               <p className="font-medium text-neutral-900 mb-2">
                                 {q++}. What class formats do you currently teach or would be open to?
                               </p>
-                              {/* ...checkboxes */}
+                              <div className="grid sm:grid-cols-2 gap-3">
+                                {[
+                                  "Individual classes - Online",
+                                  "Individual Classes - Teacher's Place",
+                                  "Individual Classes - Student's Place",
+                                  "Group classes - Online",
+                                  "Group Classes - Teacher's Place",
+                                  "None of the above - I don't teach",
+                                  "Other",
+                                ].map((label) => (
+                                  <Checkbox
+                                    key={label}
+                                    label={label}
+                                    checked={multi.classFormats.has(label)}
+                                    onChange={() => toggle("classFormats", label)}
+                                  />
+                                ))}
+                              </div>
                             </div>
 
                             {/* Q2 */}
@@ -509,7 +526,18 @@ export default function App() {
                               <p className="font-medium text-neutral-900 mb-2">
                                 {q++}. Do you provide, or open to providing, training for any of these exams?
                               </p>
-                              {/* ...checkboxes */}
+                              <div className="grid sm:grid-cols-2 gap-3">
+                                {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map(
+                                  (label) => (
+                                    <Checkbox
+                                      key={label}
+                                      label={label}
+                                      checked={multi.exams.has(label)}
+                                      onChange={() => toggle("exams", label)}
+                                    />
+                                  )
+                                )}
+                              </div>
                             </div>
 
                             {/* Q3 */}
@@ -517,7 +545,24 @@ export default function App() {
                               <p className="font-medium text-neutral-900 mb-2">
                                 {q++}. Which additional formats would you like to be involved in with Maestera?
                               </p>
-                              {/* ...checkboxes */}
+                              <div className="grid sm:grid-cols-2 gap-3">
+                                {[
+                                  "Certificate Courses",
+                                  "Workshops",
+                                  "Masterclass",
+                                  "Teach/Work at educational institutions",
+                                  "Online classes - Students residing abroad",
+                                  "None of the above - I don't teach",
+                                  "Other",
+                                ].map((label) => (
+                                  <Checkbox
+                                    key={label}
+                                    label={label}
+                                    checked={multi.additionalFormats.has(label)}
+                                    onChange={() => toggle("additionalFormats", label)}
+                                  />
+                                ))}
+                              </div>
                             </div>
 
                             {/* Q4 */}
@@ -525,7 +570,16 @@ export default function App() {
                               <p className="font-medium text-neutral-900 mb-2">
                                 {q++}. Which of these learner groups are you confident in teaching?
                               </p>
-                              {/* ...checkboxes */}
+                              <div className="grid sm:grid-cols-2 gap-3">
+                                {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
+                                  <Checkbox
+                                    key={label}
+                                    label={label}
+                                    checked={multi.learnerGroups.has(label)}
+                                    onChange={() => toggle("learnerGroups", label)}
+                                  />
+                                ))}
+                              </div>
                             </div>
                           </>
                         )}
@@ -533,20 +587,45 @@ export default function App() {
                         {/* Performances OR Both */}
                         {(assoc === "Performances" || assoc === "Both") && (
                           <>
-                            {/* Q5 / or Q1 if only performances */}
+                            {/* Qx */}
                             <div>
                               <p className="font-medium text-neutral-900 mb-2">
                                 {q++}. Please select the performance settings you are currently active in, or open to exploring?
                               </p>
-                              {/* ...checkboxes */}
+                              <div className="grid sm:grid-cols-2 gap-3">
+                                {[
+                                  "Corporates",
+                                  "Restaurants/Hotels/Cafes",
+                                  "Social gatherings",
+                                  "Weddings",
+                                  "Cultural events",
+                                  "Religious",
+                                ].map((label) => (
+                                  <Checkbox
+                                    key={label}
+                                    label={label}
+                                    checked={multi.performanceSettings.has(label)}
+                                    onChange={() => toggle("performanceSettings", label)}
+                                  />
+                                ))}
+                              </div>
                             </div>
 
-                            {/* Q6 / or Q2 if only performances */}
+                            {/* Qx */}
                             <div>
                               <p className="font-medium text-neutral-900 mb-2">
                                 {q++}. Would you be open to participating in collaborative music projects such as the following?
                               </p>
-                              {/* ...checkboxes */}
+                              <div className="grid sm:grid-cols-2 gap-3">
+                                {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+                                  <Checkbox
+                                    key={label}
+                                    label={label}
+                                    checked={multi.collabProjects.has(label)}
+                                    onChange={() => toggle("collabProjects", label)}
+                                  />
+                                ))}
+                              </div>
                             </div>
                           </>
                         )}
@@ -555,7 +634,6 @@ export default function App() {
                   })()}
                 </div>
               )}
-
 
 
 
