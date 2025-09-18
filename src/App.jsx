@@ -493,11 +493,15 @@ export default function App() {
                 </div>
                 {/* Collaborative Projects – common for all associations */}
 
-                <div className="border-l-4 border-[#D10043] pl-4">
-                  <h3 className="text-neutral-900 font-semibold mb-2">
-                    Would you be open to participating in collaborative music projects as below?
-                  </h3>
-                  <div className="grid sm:grid-cols-2 gap-3 mt-3">
+                <div className="mb-6">
+                  <div className="flex items-center mb-4">
+                    <span className="inline-block h-6 w-1 rounded bg-[#D10043] mr-2" />
+                    <h3 className="text-neutral-900 font-semibold">
+                      Would you be open to participating in collaborative music projects as below?
+                    </h3>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
                     {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
                       <Checkbox
                         key={label}
@@ -647,7 +651,7 @@ export default function App() {
                             <Input
                               type="number"
                               className="max-w-xs"
-                              placeholder="Fee's in ₹"
+                              placeholder="Fees in ₹"
                               value={basic.performanceFee || ""}
                               onChange={(e) =>
                                 setBasic({ ...basic, performanceFee: e.target.value })
