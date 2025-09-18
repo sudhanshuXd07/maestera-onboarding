@@ -198,6 +198,7 @@ export default function App() {
     setSubmitting(true);
     setError("");
     try {
+      console.log("Submitting JSON:", JSON.stringify(payload));
       const res = await fetch(SHEETS_SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
