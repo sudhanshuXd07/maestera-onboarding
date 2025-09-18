@@ -254,17 +254,16 @@ export default function App() {
       <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           {/* Left + Mid (logo shifted a bit left) */}
-          <div className="flex items-center gap-4 flex-grow">
+          <div className="flex items-center justify-center gap-4 flex-grow">
             <img
               src={logo}
               alt="Maestera Logo"
-              className="h-45 flex items-center justify-between object-contain"
+              className="h-43 flex items-center justify-between object-contain"
             />
           </div>
-
-
         </div>
       </header>
+
 
       {/* Content */}
       <main className="max-w-5xl mx-auto px-6 py-10">
@@ -291,7 +290,7 @@ export default function App() {
               <div className="mt-8 flex justify-center gap-8">
                 {/* WhatsApp */}
                 <a
-                  href="https://wa.me/919876543210" // replace with your number
+                  href="https://wa.me/9867229293" // replace with your number
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-green-500 text-4xl hover:scale-110 transition-transform"
