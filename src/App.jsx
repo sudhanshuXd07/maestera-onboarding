@@ -134,6 +134,7 @@ export default function App() {
   });
 
   const [assoc, setAssoc] = useState("Education/Teaching");
+ 
 
   const [multi, setMulti] = useState({
     classFormats: new Set(),
@@ -181,6 +182,7 @@ export default function App() {
     pincode: basic.pincode || "",
     teachingFee: basic.teachingFee || "",
     performanceFee: basic.performanceFee || "",
+    contribution: basic.contribution || "", 
     association: assoc,
     classFormats: Array.from(multi.classFormats),
     exams: Array.from(multi.exams),
