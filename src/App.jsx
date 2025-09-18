@@ -497,7 +497,7 @@ export default function App() {
                   <div className="flex items-center mb-4">
                     <span className="inline-block h-6 w-1 rounded bg-[#D10043] mr-2" />
                     <h3 className="text-neutral-900 font-semibold">
-                      Would you be open to participating in collaborative music projects as below?
+                      Would you be open to participating in collaborative music projects as below?(multiple options can be selected)
                     </h3>
                   </div>
 
