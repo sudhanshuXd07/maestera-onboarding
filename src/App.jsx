@@ -489,7 +489,7 @@ export default function App() {
                   ))}
                 </div>
                 {/* Collaborative Projects – common for all associations */}
-                <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
+               
                   <div className="border-l-4 border-[#D10043] pl-4">
                     <h3 className="text-neutral-900 font-semibold mb-2">
                       Would you be open to participating in collaborative music projects such as the following?
@@ -506,7 +506,7 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-              </div>
+              
 
               {/* Initialize question counter */}
               {(() => {
