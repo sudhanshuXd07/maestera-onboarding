@@ -5,6 +5,7 @@ export default async function handler(req, res) {
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     return res.status(200).end();
   }
+   console.log("Incoming request body at /api/submit:", req.body);
 
   try {
     const response = await fetch(process.env.SHEETS_SCRIPT_URL, {
