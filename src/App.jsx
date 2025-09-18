@@ -488,6 +488,24 @@ export default function App() {
                     />
                   ))}
                 </div>
+                {/* Collaborative Projects – common for all associations */}
+                <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
+                  <div className="border-l-4 border-[#D10043] pl-4">
+                    <h3 className="text-neutral-900 font-semibold mb-2">
+                      Would you be open to participating in collaborative music projects such as the following?
+                    </h3>
+                    <div className="grid sm:grid-cols-2 gap-3 mt-3">
+                      {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+                        <Checkbox
+                          key={label}
+                          label={label}
+                          checked={multi.collabProjects.has(label)}
+                          onChange={() => toggle("collabProjects", label)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Initialize question counter */}
@@ -600,19 +618,7 @@ export default function App() {
                             </div>
                           </div>
 
-                          <div>
-                            <p className="font-medium text-neutral-900 mb-2">{q++}. Would you be open to participating in collaborative music projects such as the following?</p>
-                            <div className="grid sm:grid-cols-2 gap-3">
-                              {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
-                                <Checkbox
-                                  key={label}
-                                  label={label}
-                                  checked={multi.collabProjects.has(label)}
-                                  onChange={() => toggle("collabProjects", label)}
-                                />
-                              ))}
-                            </div>
-                          </div>
+                          
 
                           {/* Performance Fee */}
                           <div>
