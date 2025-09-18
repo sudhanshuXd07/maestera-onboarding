@@ -134,7 +134,7 @@ export default function App() {
   });
 
   const [assoc, setAssoc] = useState("Education/Teaching");
- 
+
 
   const [multi, setMulti] = useState({
     classFormats: new Set(),
@@ -182,7 +182,7 @@ export default function App() {
     pincode: basic.pincode || "",
     teachingFee: basic.teachingFee || "",
     performanceFee: basic.performanceFee || "",
-    contribution: basic.contribution || "", 
+    contribution: basic.contribution || "",
     association: assoc,
     classFormats: Array.from(multi.classFormats),
     exams: Array.from(multi.exams),
@@ -200,7 +200,8 @@ export default function App() {
     setSubmitting(true);
     setError("");
     try {
-      console.log("Submitting JSON:", JSON.stringify(payload));
+      console.log("Submitting JSON:", JSON.stringify({ ...payload, contribution: basic.contribution || "" }));
+
       const res = await fetch(SHEETS_SCRIPT_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -599,16 +600,22 @@ export default function App() {
                           </div>
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">
-                              Any other way you would like to contribute/associate? <span className="text-neutral-500">(Optional)</span>
+                              Any other way you would like to contribute/associate?{" "}
+                              <span className="text-neutral-500">(Optional)</span>
                             </p>
                             <input
                               type="text"
                               placeholder="Your answer"
                               className="w-full border border-neutral-300 rounded-lg p-2"
                               value={basic.contribution || ""}
-                              onChange={(e) => setBasic({ ...basic, contribution: e.target.value })}
+                              onChange={(e) => {
+                                const val = e.target.value.trimStart(); // optional: avoid leading spaces
+                                setBasic((prev) => ({ ...prev, contribution: val }));
+                                console.log("Contribution updated:", val); // live debug
+                              }}
                             />
                           </div>
+
                         </div>
                       </div>
                     )}
