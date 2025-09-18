@@ -489,24 +489,24 @@ export default function App() {
                   ))}
                 </div>
                 {/* Collaborative Projects – common for all associations */}
-               
-                  <div className="border-l-4 border-[#D10043] pl-4">
-                    <h3 className="text-neutral-900 font-semibold mb-2">
-                      Would you be open to participating in collaborative music projects such as the following?
-                    </h3>
-                    <div className="grid sm:grid-cols-2 gap-3 mt-3">
-                      {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
-                        <Checkbox
-                          key={label}
-                          label={label}
-                          checked={multi.collabProjects.has(label)}
-                          onChange={() => toggle("collabProjects", label)}
-                        />
-                      ))}
-                    </div>
+
+                <div className="border-l-4 border-[#D10043] pl-4">
+                  <h3 className="text-neutral-900 font-semibold mb-2">
+                    Would you be open to participating in collaborative music projects as below?
+                  </h3>
+                  <div className="grid sm:grid-cols-2 gap-3 mt-3">
+                    {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+                      <Checkbox
+                        key={label}
+                        label={label}
+                        checked={multi.collabProjects.has(label)}
+                        onChange={() => toggle("collabProjects", label)}
+                      />
+                    ))}
                   </div>
                 </div>
-              
+              </div>
+
 
               {/* Initialize question counter */}
               {(() => {
@@ -588,11 +588,23 @@ export default function App() {
                             <Input
                               type="number"
                               className="max-w-xs"
-                              placeholder="Fee's in ₹"
+                              placeholder="Fees in ₹"
                               value={basic.teachingFee || ""}
                               onChange={(e) =>
                                 setBasic({ ...basic, teachingFee: e.target.value })
                               }
+                            />
+                          </div>
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">
+                              Any other way you would like to contribute/associate? <span className="text-neutral-500">(Optional)</span>
+                            </p>
+                            <input
+                              type="text"
+                              placeholder="Your answer"
+                              className="w-full border border-neutral-300 rounded-lg p-2"
+                              value={basic.contribution || ""}
+                              onChange={(e) => setBasic({ ...basic, contribution: e.target.value })}
                             />
                           </div>
                         </div>
@@ -618,7 +630,7 @@ export default function App() {
                             </div>
                           </div>
 
-                          
+
 
                           {/* Performance Fee */}
                           <div>
