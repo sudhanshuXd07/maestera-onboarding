@@ -164,11 +164,31 @@ export default function App() {
       Boolean((basic.pincode || "").trim())
     );
   }, [basic]);
+  const multiValid = useMemo(() => {
+    // Teaching
+    const teachingOk =
+      assoc !== "Performances" &&
+      (multi.classFormats.size > 0 &&
+        multi.exams.size > 0 &&
+        multi.additionalFormats.size > 0 &&
+        multi.learnerGroups.size > 0 &&
+        (basic.teachingFee || "").trim() !== "");
+
+    // Performances
+    const performanceOk =
+      assoc !== "Education/Teaching" &&
+      (multi.performanceSettings.size > 0 &&
+        (basic.performanceFee || "").trim() !== "");
+
+    return teachingOk || performanceOk || assoc === "Both";
+  }, [assoc, multi, basic]);
+
 
   const canNext = useMemo(() => {
     if (step === 0) return true;
     if (step === 1) return basicValid;
-    if (step === 2) return true;
+    if (step === 2) return multiValid;
+
     return true;
   }, [step, basicValid]);
 
@@ -235,6 +255,12 @@ export default function App() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    if (step === 2 && !multiValid) {
+      setError("⚠️ Please complete all required fields before submitting.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
 
     // clear any previous error before advancing
     setError("");
@@ -497,12 +523,13 @@ export default function App() {
                   <div className="flex items-center mb-4">
                     <span className="inline-block h-6 w-1 rounded bg-[#D10043] mr-2" />
                     <h3 className="text-neutral-900 font-semibold">
-                      Would you be open to participating in collaborative music projects as below?(multiple options can be selected)
+                      Would you be open to participating in collaborative music projects as below?
+                      <span className="text-neutral-500 ml-1">(multiple options can be selected)</span>
                     </h3>
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-3">
-                    {["Orchestra", "Choirs", "Theatre", "Ensembles"].map((label) => (
+                    {["Orchestra", "Choirs", "Theatre", "Ensembles", "Other"].map((label) => (
                       <Checkbox
                         key={label}
                         label={label}
@@ -510,8 +537,23 @@ export default function App() {
                         onChange={() => toggle("collabProjects", label)}
                       />
                     ))}
+
+                    {/* None of the above */}
+                    <Checkbox
+                      label="None of the above"
+                      checked={multi.collabProjects.has("None")}
+                      onChange={() => {
+                        if (!multi.collabProjects.has("None")) {
+                          // Clear all and only keep "None"
+                          setMulti({ ...multi, collabProjects: new Set(["None"]) });
+                        } else {
+                          toggle("collabProjects", "None");
+                        }
+                      }}
+                    />
                   </div>
                 </div>
+
               </div>
 
 
