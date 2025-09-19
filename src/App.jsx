@@ -650,7 +650,7 @@ export default function App() {
                     {/* Performances or Both */}
                     {(assoc === "Performances" || assoc === "Both") && (
                       <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
-                        <h3 className="text-neutral-900 font-semibold mb-2">Performances</h3>
+                        <h3 className="text-neutral-900 font-semibold mb-2">Performances (multiple choices)</h3>
                         <div className="space-y-6">
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Please select the performance settings you are currently active in, or open to exploring?</p>
