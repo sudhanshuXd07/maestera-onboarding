@@ -550,7 +550,7 @@ export default function App() {
                   </div>
 
                   <div className="grid sm:grid-cols-2 gap-3">
-                    {["Orchestra", "Choirs", "Theatre", "Ensembles", "Other"].map((label) => (
+                    {["Orchestra", "Choirs", "Theatre", "Ensembles", "Others(specify below)"].map((label) => (
                       <Checkbox key={label} label={label} checked={multi.collabProjects.has(label)} onChange={() => toggle("collabProjects", label)} />
                     ))}
 
@@ -584,7 +584,7 @@ export default function App() {
                                 "Group classes - Online",
                                 "Group Classes - Teacher's Place",
                                 "None of the above",
-                                "Other",
+                                "Others(specify below)",
                               ].map((label) => (
                                 <Checkbox key={label} label={label} checked={multi.classFormats.has(label)} onChange={() => toggle("classFormats", label)} />
                               ))}
@@ -594,7 +594,7 @@ export default function App() {
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Do you provide, or open to providing, training for any of these exams?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
-                              {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above", "Other"].map((label) => (
+                              {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above", "Others(specify below)"].map((label) => (
                                 <Checkbox key={label} label={label} checked={multi.exams.has(label)} onChange={() => toggle("exams", label)} />
                               ))}
                             </div>
@@ -603,7 +603,7 @@ export default function App() {
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Which additional formats would you like to be involved in with Maestera?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
-                              {["Certificate Courses", "Workshops", "Masterclass", "Teach/Work at educational institutions", "Online classes - Students residing abroad", "None of the above", "Other"].map((label) => (
+                              {["Certificate Courses", "Workshops", "Masterclass", "Teach/Work at educational institutions", "Online classes - Students residing abroad", "None of the above", "Other(specify below)"].map((label) => (
                                 <Checkbox key={label} label={label} checked={multi.additionalFormats.has(label)} onChange={() => toggle("additionalFormats", label)} />
                               ))}
                             </div>
@@ -612,7 +612,7 @@ export default function App() {
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Which of these learner groups are you confident in teaching?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
-                              {["Children", "Specially Abled", "Senior Citizen","None of the above","Other"].map((label) => (
+                              {["Children", "Specially Abled", "Senior Citizen","None of the above","Others(specify below)"].map((label) => (
                                 <Checkbox key={label} label={label} checked={multi.learnerGroups.has(label)} onChange={() => toggle("learnerGroups", label)} />
                               ))}
                             </div>
@@ -655,7 +655,7 @@ export default function App() {
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Please select the performance settings you are currently active in, or open to exploring?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
-                              {["Corporates", "Restaurants/Hotels/Cafes", "Social gatherings", "Weddings", "Cultural events", "Religious","Other"].map((label) => (
+                              {["Corporates", "Restaurants/Hotels/Cafes", "Social gatherings", "Weddings", "Cultural events", "Religious","Others(specify below)"].map((label) => (
                                 <Checkbox key={label} label={label} checked={multi.performanceSettings.has(label)} onChange={() => toggle("performanceSettings", label)} />
                               ))}
                             </div>
