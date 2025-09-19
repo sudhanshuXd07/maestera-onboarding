@@ -106,7 +106,7 @@ const StepNav = ({ step, total, onBack, onNext, canNext, submitting }) => (
     <button
       type="button"
       onClick={onNext}
-      disabled={!canNext || submitting}
+      disabled={submitting} // keep button usable for validation; only disable while submitting
       className="px-6 py-2.5 rounded-xl text-white"
       style={{ backgroundColor: submitting ? "#78716c" : brand.black }}
     >
@@ -131,10 +131,12 @@ export default function App() {
     instruments: "",
     city: "",
     pincode: "",
+    teachingFee: "",
+    performanceFee: "",
+    contribution: "",
   });
 
   const [assoc, setAssoc] = useState("Education/Teaching");
-
 
   const [multi, setMulti] = useState({
     classFormats: new Set(),
@@ -148,6 +150,21 @@ export default function App() {
   const toggle = (group, value) => {
     setMulti((prev) => {
       const next = new Set(prev[group]);
+      // special handling for "None" in collabProjects
+      if (group === "collabProjects" && value === "None") {
+        // toggle "None" exclusively
+        if (!next.has("None")) {
+          return { ...prev, collabProjects: new Set(["None"]) };
+        } else {
+          next.delete("None");
+          return { ...prev, collabProjects: next };
+        }
+      }
+      // if "None" exists and user selects something else, remove "None"
+      if (group === "collabProjects" && next.has("None") && value !== "None") {
+        next.delete("None");
+      }
+
       next.has(value) ? next.delete(value) : next.add(value);
       return { ...prev, [group]: next };
     });
@@ -164,63 +181,40 @@ export default function App() {
       Boolean((basic.pincode || "").trim())
     );
   }, [basic]);
-  const multiValid = useMemo(() => {
-    // Teaching
-    const teachingOk =
-      assoc !== "Performances" &&
-      (multi.classFormats.size > 0 &&
-        multi.exams.size > 0 &&
-        multi.additionalFormats.size > 0 &&
-        multi.learnerGroups.size > 0 &&
-        (basic.teachingFee || "").trim() !== "");
 
-    // Performances
-    const performanceOk =
-      assoc !== "Education/Teaching" &&
-      (multi.performanceSettings.size > 0 &&
-        (basic.performanceFee || "").trim() !== "");
-
-    return teachingOk || performanceOk || assoc === "Both";
-  }, [assoc, multi, basic]);
-
-
-  const canNext = useMemo(() => {
-    if (step === 0) return true;
-    if (step === 1) return basicValid;
-    if (step === 2) return multiValid;
-
-    return true;
-  }, [step, basicValid]);
-
-  const payload = useMemo(() => ({
-    fullName: basic.fullName || "",
-    phone: basic.phone || "",
-    email: basic.email || "",
-    dob: basic.dob || "",
-    instruments: basic.instruments || "",
-    city: basic.city || "",
-    pincode: basic.pincode || "",
-    teachingFee: basic.teachingFee || "",
-    performanceFee: basic.performanceFee || "",
-    contribution: basic.contribution || "",
-    association: assoc,
-    classFormats: Array.from(multi.classFormats),
-    exams: Array.from(multi.exams),
-    additionalFormats: Array.from(multi.additionalFormats),
-    learnerGroups: Array.from(multi.learnerGroups),
-    performanceSettings: Array.from(multi.performanceSettings),
-    collabProjects: Array.from(multi.collabProjects),
-    timestamp: new Date().toISOString(),
-  }), [basic, assoc, multi]);
-
-
-
+  // build payload (keeps the same shape you had)
+  const payload = useMemo(
+    () => ({
+      fullName: basic.fullName || "",
+      phone: basic.phone || "",
+      email: basic.email || "",
+      dob: basic.dob || "",
+      instruments: basic.instruments || "",
+      city: basic.city || "",
+      pincode: basic.pincode || "",
+      teachingFee: basic.teachingFee || "",
+      performanceFee: basic.performanceFee || "",
+      contribution: basic.contribution || "",
+      association: assoc,
+      classFormats: Array.from(multi.classFormats),
+      exams: Array.from(multi.exams),
+      additionalFormats: Array.from(multi.additionalFormats),
+      learnerGroups: Array.from(multi.learnerGroups),
+      performanceSettings: Array.from(multi.performanceSettings),
+      collabProjects: Array.from(multi.collabProjects),
+      timestamp: new Date().toISOString(),
+    }),
+    [basic, assoc, multi]
+  );
 
   const submit = async () => {
     setSubmitting(true);
     setError("");
     try {
-      console.log("Submitting JSON:", JSON.stringify({ ...payload, contribution: basic.contribution || "" }));
+      console.log(
+        "Submitting JSON:",
+        JSON.stringify({ ...payload, contribution: basic.contribution || "" })
+      );
 
       const res = await fetch(SHEETS_SCRIPT_URL, {
         method: "POST",
@@ -247,54 +241,83 @@ export default function App() {
     }
   };
 
-  const onNext = () => {
-    // If we're on Basic Info step (step === 1) validate and show error
-    if (step === 1 && !basicValid) {
-      setError("⚠️ Please fill out all required fields before continuing.");
-      // optional: scroll to top of form so error is visible
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    if (step === 2 && !multiValid) {
-      setError("⚠️ Please complete all required fields before submitting.");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-    const validateStep2 = () => {
-      let errors = [];
+  // Validate Step 2 in strict order and return list (first item will be shown)
+  const validateStep2 = () => {
+    const errors = [];
 
-      if ((assoc === "Education/Teaching" || assoc === "Both")) {
-        if (multi.classFormats.size === 0)
-          errors.push("Please select at least one option for class formats.");
-        if (multi.exams.size === 0)
-          errors.push("Please select at least one option for exams.");
-        if (multi.additionalFormats.size === 0)
-          errors.push("Please select at least one option for additional formats.");
-        if (multi.learnerGroups.size === 0)
-          errors.push("Please select at least one learner group.");
-        if (!basic.teachingFee)
-          errors.push("Please enter your teaching fees.");
-        // contribution is optional, so skip
-      }
-
-      if ((assoc === "Performances" || assoc === "Both")) {
-        if (multi.performanceSettings.size === 0)
-          errors.push("Please select at least one performance setting.");
-        if (!basic.performanceFee)
-          errors.push("Please enter your performance fees.");
-      }
-
-      if (multi.collabProjects.size === 0) {
-        errors.push("Please select at least one collaborative project option.");
-      }
-
+    // association required (should always be set, but just in case)
+    if (!assoc) {
+      errors.push("Please select how you'd like to engage with Maestera.");
       return errors;
-    };
+    }
 
+    // Collaborative projects is global (first)
+    if (!multi.collabProjects || multi.collabProjects.size === 0) {
+      errors.push("Please select at least one collaborative project option.");
+      return errors;
+    }
 
-    // clear any previous error before advancing
+    // If Education/Teaching or Both — check teaching-related fields in order
+    if (assoc === "Education/Teaching" || assoc === "Both") {
+      if (!multi.classFormats || multi.classFormats.size === 0) {
+        errors.push("Please select at least one option for class formats.");
+        return errors;
+      }
+      if (!multi.exams || multi.exams.size === 0) {
+        errors.push("Please select at least one option for exams.");
+        return errors;
+      }
+      if (!multi.additionalFormats || multi.additionalFormats.size === 0) {
+        errors.push("Please select at least one option for additional formats.");
+        return errors;
+      }
+      if (!multi.learnerGroups || multi.learnerGroups.size === 0) {
+        errors.push("Please select at least one learner group.");
+        return errors;
+      }
+      if (!basic.teachingFee || String(basic.teachingFee).trim() === "") {
+        errors.push("Please enter your teaching fees.");
+        return errors;
+      }
+      // contribution is optional — skip
+    }
+
+    // If Performances or Both — check performance-related fields in order
+    if (assoc === "Performances" || assoc === "Both") {
+      if (!multi.performanceSettings || multi.performanceSettings.size === 0) {
+        errors.push("Please select at least one performance setting.");
+        return errors;
+      }
+      if (!basic.performanceFee || String(basic.performanceFee).trim() === "") {
+        errors.push("Please enter your performance fees.");
+        return errors;
+      }
+    }
+
+    return errors;
+  };
+
+  const onNext = () => {
     setError("");
 
+    // Step 1 validation (basic info) — same behaviour as before (click Next shows error)
+    if (step === 1 && !basicValid) {
+      setError("⚠️ Please fill out all required fields before continuing.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    // Step 2 validation: run strict ordered checks and show first error if any.
+    if (step === 2) {
+      const errs = validateStep2();
+      if (errs.length > 0) {
+        setError(errs[0]);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+    }
+
+    // If final step, submit; else move forward
     if (step === totalSteps - 1) {
       submit();
     } else {
@@ -310,7 +333,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
-
       <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           {/* Left + Mid (logo shifted a bit left) */}
@@ -323,7 +345,6 @@ export default function App() {
           </div>
         </div>
       </header>
-
 
       {/* Content */}
       <main className="max-w-5xl mx-auto px-6 py-10">
@@ -342,15 +363,13 @@ export default function App() {
               <p className="mt-3 text-neutral-700">
                 For any queries, you can reach out to us through our website or social media platforms
               </p>
-              <p className="mt-3 text-neutral-700">
-                We will be in touch with you!
-              </p>
+              <p className="mt-3 text-neutral-700">We will be in touch with you!</p>
 
               {/* ✅ Social Icons instead of Button */}
               <div className="mt-8 flex justify-center gap-8">
                 {/* WhatsApp */}
                 <a
-                  href="https://wa.me/9867229293" // replace with your number
+                  href="https://wa.me/9867229293"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-green-500 text-4xl hover:scale-110 transition-transform"
@@ -360,7 +379,7 @@ export default function App() {
 
                 {/* Instagram */}
                 <a
-                  href="https://www.instagram.com/maestera.music?igsh=MWhocXIwa3d6cWQ0Nw==" // replace with your IG link
+                  href="https://www.instagram.com/maestera.music?igsh=MWhocXIwa3d6cWQ0Nw=="
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-pink-500 text-4xl hover:scale-110 transition-transform"
@@ -370,7 +389,6 @@ export default function App() {
               </div>
             </motion.div>
           ) : step === 0 ? (
-
             <motion.div
               key="intro"
               initial={{ opacity: 0, y: 8 }}
@@ -385,14 +403,19 @@ export default function App() {
                   </h1>
 
                   <p className="mt-6 text-neutral-700 leading-relaxed">
-                    Thank you for your passion for music and for contacting <br /> <strong>Maestera — India’s most flexible and inclusive platform for musicians</strong>.
+                    Thank you for your passion for music and for contacting <br />{" "}
+                    <strong>
+                      Maestera — India’s most flexible and inclusive platform for musicians
+                    </strong>
+                    .
                   </p>
 
                   <p className="mt-4 text-neutral-700 leading-relaxed">
                     While our core focus is helping students learn and grow, we know that many teachers also share their art through performances.
                   </p>
                   <p className="mt-4 text-neutral-700 leading-relaxed">
-                    By being part of Maestera, you’ll have the chance to <strong>showcase not only your teaching but also your performing side </strong>— opening up opportunities with students, families, and event organizers alike.
+                    By being part of Maestera, you’ll have the chance to{" "}
+                    <strong>showcase not only your teaching but also your performing side </strong>— opening up opportunities with students, families, and event organizers alike.
                   </p>
                   <p className="mt-4 text-neutral-700 leading-relaxed">
                     This quick form will take just <strong>30–60 seconds to complete.</strong>
@@ -401,8 +424,6 @@ export default function App() {
                   <p className="mt-4 text-neutral-700 leading-relaxed">
                     It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
                   </p>
-
-
                 </div>
                 <div className="h-1 w-full bg-rose-600" />
                 <div className="p-6 flex items-center justify-between">
@@ -424,18 +445,13 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-              <Section
-                title="Basic Information"
-
-              >
+              <Section title="Basic Information">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <Field label="Full Name" required>
                     <Input
                       placeholder="Your full name"
                       value={basic.fullName}
-                      onChange={(e) =>
-                        setBasic({ ...basic, fullName: e.target.value })
-                      }
+                      onChange={(e) => setBasic({ ...basic, fullName: e.target.value })}
                       required
                     />
                   </Field>
@@ -443,9 +459,7 @@ export default function App() {
                     <Input
                       placeholder="e.g. 9876543210"
                       value={basic.phone}
-                      onChange={(e) =>
-                        setBasic({ ...basic, phone: e.target.value })
-                      }
+                      onChange={(e) => setBasic({ ...basic, phone: e.target.value })}
                       required
                     />
                   </Field>
@@ -454,9 +468,7 @@ export default function App() {
                       type="email"
                       placeholder="you@example.com"
                       value={basic.email}
-                      onChange={(e) =>
-                        setBasic({ ...basic, email: e.target.value })
-                      }
+                      onChange={(e) => setBasic({ ...basic, email: e.target.value })}
                       required
                     />
                   </Field>
@@ -464,9 +476,7 @@ export default function App() {
                     <Input
                       type="date"
                       value={basic.dob}
-                      onChange={(e) =>
-                        setBasic({ ...basic, dob: e.target.value })
-                      }
+                      onChange={(e) => setBasic({ ...basic, dob: e.target.value })}
                       required
                     />
                   </Field>
@@ -474,9 +484,7 @@ export default function App() {
                     <Input
                       placeholder="e.g. Tabla, Guitar, Piano"
                       value={basic.instruments}
-                      onChange={(e) =>
-                        setBasic({ ...basic, instruments: e.target.value })
-                      }
+                      onChange={(e) => setBasic({ ...basic, instruments: e.target.value })}
                       required
                     />
                   </Field>
@@ -484,9 +492,7 @@ export default function App() {
                     <Input
                       placeholder="e.g. Mumbai"
                       value={basic.city}
-                      onChange={(e) =>
-                        setBasic({ ...basic, city: e.target.value })
-                      }
+                      onChange={(e) => setBasic({ ...basic, city: e.target.value })}
                       required
                     />
                   </Field>
@@ -494,26 +500,20 @@ export default function App() {
                     <Input
                       placeholder="e.g. 400001"
                       value={basic.pincode}
-                      onChange={(e) =>
-                        setBasic({ ...basic, pincode: e.target.value })
-                      }
+                      onChange={(e) => setBasic({ ...basic, pincode: e.target.value })}
                       required
                     />
                   </Field>
                 </div>
               </Section>
-              {error && (
-                <p className="mt-4 text-sm font-semibold text-rose-600 text-center">
-                  {error}
-                </p>
-              )}
+              {error && <p className="mt-4 text-sm font-semibold text-rose-600 text-center">{error}</p>}
 
               <StepNav
                 step={step}
                 total={totalSteps}
                 onBack={onBack}
                 onNext={onNext}
-                canNext={true}   // ✅ always clickable
+                canNext={true} // leave clickable — onNext performs validation and shows errors
                 submitting={submitting}
               />
             </motion.div>
@@ -524,8 +524,6 @@ export default function App() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
             >
-
-
               {/* Association Card */}
               <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
                 <div className="flex items-center mb-4">
@@ -537,18 +535,11 @@ export default function App() {
 
                 <div className="flex flex-wrap gap-6">
                   {["Education/Teaching", "Performances", "Both"].map((v) => (
-                    <Radio
-                      key={v}
-                      name="assoc"
-                      value={v}
-                      current={assoc}
-                      onChange={setAssoc}
-                      label={v}
-                    />
+                    <Radio key={v} name="assoc" value={v} current={assoc} onChange={setAssoc} label={v} />
                   ))}
                 </div>
-                {/* Collaborative Projects – common for all associations */}
 
+                {/* Collaborative Projects – common for all associations */}
                 <div className="mb-6">
                   <div className="flex items-center mb-4">
                     <span className="inline-block h-6 w-1 rounded bg-[#D10043] mr-2" />
@@ -560,32 +551,18 @@ export default function App() {
 
                   <div className="grid sm:grid-cols-2 gap-3">
                     {["Orchestra", "Choirs", "Theatre", "Ensembles", "Other"].map((label) => (
-                      <Checkbox
-                        key={label}
-                        label={label}
-                        checked={multi.collabProjects.has(label)}
-                        onChange={() => toggle("collabProjects", label)}
-                      />
+                      <Checkbox key={label} label={label} checked={multi.collabProjects.has(label)} onChange={() => toggle("collabProjects", label)} />
                     ))}
 
                     {/* None of the above */}
                     <Checkbox
                       label="None of the above"
                       checked={multi.collabProjects.has("None")}
-                      onChange={() => {
-                        if (!multi.collabProjects.has("None")) {
-                          // Clear all and only keep "None"
-                          setMulti({ ...multi, collabProjects: new Set(["None"]) });
-                        } else {
-                          toggle("collabProjects", "None");
-                        }
-                      }}
+                      onChange={() => toggle("collabProjects", "None")}
                     />
                   </div>
                 </div>
-
               </div>
-
 
               {/* Initialize question counter */}
               {(() => {
@@ -609,12 +586,7 @@ export default function App() {
                                 "None of the above - I don't teach",
                                 "Other",
                               ].map((label) => (
-                                <Checkbox
-                                  key={label}
-                                  label={label}
-                                  checked={multi.classFormats.has(label)}
-                                  onChange={() => toggle("classFormats", label)}
-                                />
+                                <Checkbox key={label} label={label} checked={multi.classFormats.has(label)} onChange={() => toggle("classFormats", label)} />
                               ))}
                             </div>
                           </div>
@@ -623,12 +595,7 @@ export default function App() {
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Do you provide, or open to providing, training for any of these exams?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
                               {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map((label) => (
-                                <Checkbox
-                                  key={label}
-                                  label={label}
-                                  checked={multi.exams.has(label)}
-                                  onChange={() => toggle("exams", label)}
-                                />
+                                <Checkbox key={label} label={label} checked={multi.exams.has(label)} onChange={() => toggle("exams", label)} />
                               ))}
                             </div>
                           </div>
@@ -637,12 +604,7 @@ export default function App() {
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Which additional formats would you like to be involved in with Maestera?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
                               {["Certificate Courses", "Workshops", "Masterclass", "Teach/Work at educational institutions", "Online classes - Students residing abroad", "None of the above - I don't teach", "Other"].map((label) => (
-                                <Checkbox
-                                  key={label}
-                                  label={label}
-                                  checked={multi.additionalFormats.has(label)}
-                                  onChange={() => toggle("additionalFormats", label)}
-                                />
+                                <Checkbox key={label} label={label} checked={multi.additionalFormats.has(label)} onChange={() => toggle("additionalFormats", label)} />
                               ))}
                             </div>
                           </div>
@@ -651,12 +613,7 @@ export default function App() {
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Which of these learner groups are you confident in teaching?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
                               {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
-                                <Checkbox
-                                  key={label}
-                                  label={label}
-                                  checked={multi.learnerGroups.has(label)}
-                                  onChange={() => toggle("learnerGroups", label)}
-                                />
+                                <Checkbox key={label} label={label} checked={multi.learnerGroups.has(label)} onChange={() => toggle("learnerGroups", label)} />
                               ))}
                             </div>
                           </div>
@@ -669,11 +626,10 @@ export default function App() {
                               className="max-w-xs"
                               placeholder="Fees in ₹"
                               value={basic.teachingFee || ""}
-                              onChange={(e) =>
-                                setBasic({ ...basic, teachingFee: e.target.value })
-                              }
+                              onChange={(e) => setBasic({ ...basic, teachingFee: e.target.value })}
                             />
                           </div>
+
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">
                               Any other way you would like to contribute/associate?{" "}
@@ -684,14 +640,9 @@ export default function App() {
                               placeholder="Your answer"
                               className="w-full border border-neutral-300 rounded-lg p-2"
                               value={basic.contribution || ""}
-                              onChange={(e) => {
-                                const val = e.target.value.trimStart(); // optional: avoid leading spaces
-                                setBasic((prev) => ({ ...prev, contribution: val }));
-                                console.log("Contribution updated:", val); // live debug
-                              }}
+                              onChange={(e) => setBasic((prev) => ({ ...prev, contribution: e.target.value.trimStart() }))}
                             />
                           </div>
-
                         </div>
                       </div>
                     )}
@@ -705,17 +656,10 @@ export default function App() {
                             <p className="font-medium text-neutral-900 mb-2">{q++}. Please select the performance settings you are currently active in, or open to exploring?</p>
                             <div className="grid sm:grid-cols-2 gap-3">
                               {["Corporates", "Restaurants/Hotels/Cafes", "Social gatherings", "Weddings", "Cultural events", "Religious"].map((label) => (
-                                <Checkbox
-                                  key={label}
-                                  label={label}
-                                  checked={multi.performanceSettings.has(label)}
-                                  onChange={() => toggle("performanceSettings", label)}
-                                />
+                                <Checkbox key={label} label={label} checked={multi.performanceSettings.has(label)} onChange={() => toggle("performanceSettings", label)} />
                               ))}
                             </div>
                           </div>
-
-
 
                           {/* Performance Fee */}
                           <div>
@@ -725,9 +669,7 @@ export default function App() {
                               className="max-w-xs"
                               placeholder="Fees in ₹"
                               value={basic.performanceFee || ""}
-                              onChange={(e) =>
-                                setBasic({ ...basic, performanceFee: e.target.value })
-                              }
+                              onChange={(e) => setBasic({ ...basic, performanceFee: e.target.value })}
                             />
                           </div>
                         </div>
@@ -737,19 +679,9 @@ export default function App() {
                 );
               })()}
 
+              {error && <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>}
 
-              {error && (
-                <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
-              )}
-
-              <StepNav
-                step={step}
-                total={totalSteps}
-                onBack={onBack}
-                onNext={onNext}
-                canNext={canNext}
-                submitting={submitting}
-              />
+              <StepNav step={step} total={totalSteps} onBack={onBack} onNext={onNext} canNext={true} submitting={submitting} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -758,9 +690,7 @@ export default function App() {
       {/* Footer */}
       <footer className="mt-16">
         <div className="h-[5px] w-full bg-rose-600" />
-        <div className="py-6 text-center text-xs text-neutral-600">
-          © {new Date().getFullYear()} Maestera • Made with ♫
-        </div>
+        <div className="py-6 text-center text-xs text-neutral-600">© {new Date().getFullYear()} Maestera • Made with ♫</div>
       </footer>
     </div>
   );
