@@ -572,7 +572,7 @@ export default function App() {
                     {/* Education/Teaching or Both */}
                     {(assoc === "Education/Teaching" || assoc === "Both") && (
                       <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
-                        <h3 className="text-neutral-900 font-semibold mb-2">Education / Teaching</h3>
+                        <h3 className="text-neutral-900 font-semibold mb-2">Education / Teaching (multiple choices)</h3>
                         <div className="space-y-6">
                           <div>
                             <p className="font-medium text-neutral-900 mb-2">{q++}. What class formats do you currently teach or would be open to?</p>
