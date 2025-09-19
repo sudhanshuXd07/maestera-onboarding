@@ -248,24 +248,52 @@ export default function App() {
   };
 
   const onNext = () => {
-    setError("");
-
-    // Step 1 validation (basic info)
+    // If we're on Basic Info step (step === 1) validate and show error
     if (step === 1 && !basicValid) {
       setError("⚠️ Please fill out all required fields before continuing.");
+      // optional: scroll to top of form so error is visible
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-
-    // Step 2 validation (multi-sections)
-    if (step === 2) {
-      const errs = validateStep2();
-      if (errs.length > 0) {
-        setError(errs[0]); // show only first error
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        return;
-      }
+    if (step === 2 && !multiValid) {
+      setError("⚠️ Please complete all required fields before submitting.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
     }
+    const validateStep2 = () => {
+      let errors = [];
+
+      if ((assoc === "Education/Teaching" || assoc === "Both")) {
+        if (multi.classFormats.size === 0)
+          errors.push("Please select at least one option for class formats.");
+        if (multi.exams.size === 0)
+          errors.push("Please select at least one option for exams.");
+        if (multi.additionalFormats.size === 0)
+          errors.push("Please select at least one option for additional formats.");
+        if (multi.learnerGroups.size === 0)
+          errors.push("Please select at least one learner group.");
+        if (!basic.teachingFee)
+          errors.push("Please enter your teaching fees.");
+        // contribution is optional, so skip
+      }
+
+      if ((assoc === "Performances" || assoc === "Both")) {
+        if (multi.performanceSettings.size === 0)
+          errors.push("Please select at least one performance setting.");
+        if (!basic.performanceFee)
+          errors.push("Please enter your performance fees.");
+      }
+
+      if (multi.collabProjects.size === 0) {
+        errors.push("Please select at least one collaborative project option.");
+      }
+
+      return errors;
+    };
+
+
+    // clear any previous error before advancing
+    setError("");
 
     if (step === totalSteps - 1) {
       submit();
@@ -275,516 +303,465 @@ export default function App() {
     }
   };
 
-  const validateStep2 = () => {
-    let errors = [];
-
-    // Association required
-    if (!assoc) {
-      errors.push("Please select how you'd like to engage with Maestera.");
-    }
-
-    // Education/Teaching
-    if (assoc === "Education/Teaching" || assoc === "Both") {
-      if (multi.classFormats.size === 0)
-        errors.push("Please select at least one option for class formats.");
-      if (multi.exams.size === 0)
-        errors.push("Please select at least one option for exams.");
-      if (multi.additionalFormats.size === 0)
-        errors.push("Please select at least one option for additional formats.");
-      if (multi.learnerGroups.size === 0)
-        errors.push("Please select at least one learner group.");
-      if (!basic.teachingFee)
-        errors.push("Please enter your teaching fees.");
-      // contribution is optional, so no validation
-    }
-
-    // Performances
-    if (assoc === "Performances" || assoc === "Both") {
-      if (multi.performanceSettings.size === 0)
-        errors.push("Please select at least one performance setting.");
-      if (!basic.performanceFee)
-        errors.push("Please enter your performance fees.");
-    }
-
-    // Collaborative projects (common for all)
-    if (multi.collabProjects.size === 0) {
-      errors.push("Please select at least one collaborative project option.");
-    }
-
-    return errors;
+  const onBack = () => {
+    setStep((s) => Math.max(s - 1, 0));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
 
-  // clear any previous error before advancing
-  setError("");
-
-  if (step === totalSteps - 1) {
-    submit();
-  } else {
-    setStep((s) => Math.min(s + 1, totalSteps - 1));
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-};
-
-const onBack = () => {
-  setStep((s) => Math.max(s - 1, 0));
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
-
-return (
-  <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
-
-    <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
-      <div className="max-w-6xl mx-auto flex items-center justify-between">
-        {/* Left + Mid (logo shifted a bit left) */}
-        <div className="flex items-center justify-center gap-4 flex-grow">
-          <img
-            src={logo}
-            alt="Maestera Logo"
-            className="h-43 flex items-center justify-between object-contain"
-          />
-        </div>
-      </div>
-    </header>
-
-
-    {/* Content */}
-    <main className="max-w-5xl mx-auto px-6 py-10">
-      <AnimatePresence mode="wait">
-        {submitted ? (
-          <motion.div
-            key="thanks"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="w-full max-w-3xl mx-auto text-center"
-          >
-            <h2 className="text-3xl font-semibold text-neutral-900">
-              Thank you for the response
-            </h2>
-            <p className="mt-3 text-neutral-700">
-              For any queries, you can reach out to us through our website or social media platforms
-            </p>
-            <p className="mt-3 text-neutral-700">
-              We will be in touch with you!
-            </p>
-
-            {/* ✅ Social Icons instead of Button */}
-            <div className="mt-8 flex justify-center gap-8">
-              {/* WhatsApp */}
-              <a
-                href="https://wa.me/9867229293" // replace with your number
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-green-500 text-4xl hover:scale-110 transition-transform"
-              >
-                <FaWhatsapp />
-              </a>
-
-              {/* Instagram */}
-              <a
-                href="https://www.instagram.com/maestera.music?igsh=MWhocXIwa3d6cWQ0Nw==" // replace with your IG link
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-pink-500 text-4xl hover:scale-110 transition-transform"
-              >
-                <FaInstagram />
-              </a>
-            </div>
-          </motion.div>
-        ) : step === 0 ? (
-
-          <motion.div
-            key="intro"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="w-full max-w-3xl mx-auto"
-          >
-            <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-              <div className="p-8 text-center">
-                <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
-                  Welcome to Maestera
-                </h1>
-
-                <p className="mt-6 text-neutral-700 leading-relaxed">
-                  Thank you for your passion for music and for contacting <br /> <strong>Maestera — India’s most flexible and inclusive platform for musicians</strong>.
-                </p>
-
-                <p className="mt-4 text-neutral-700 leading-relaxed">
-                  While our core focus is helping students learn and grow, we know that many teachers also share their art through performances.
-                </p>
-                <p className="mt-4 text-neutral-700 leading-relaxed">
-                  By being part of Maestera, you’ll have the chance to <strong>showcase not only your teaching but also your performing side </strong>— opening up opportunities with students, families, and event organizers alike.
-                </p>
-                <p className="mt-4 text-neutral-700 leading-relaxed">
-                  This quick form will take just <strong>30–60 seconds to complete.</strong>
-                </p>
-
-                <p className="mt-4 text-neutral-700 leading-relaxed">
-                  It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
-                </p>
-
-
-              </div>
-              <div className="h-1 w-full bg-rose-600" />
-              <div className="p-6 flex items-center justify-between">
-                <div className="text-neutral-600 text-sm">Step 1 of {totalSteps}</div>
-                <button
-                  className="px-6 py-2.5 rounded-xl text-white"
-                  style={{ backgroundColor: brand.black }}
-                  onClick={() => setStep(1)}
-                >
-                  Continue
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        ) : step === 1 ? (
-          <motion.div
-            key="basic"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-          >
-            <Section
-              title="Basic Information"
-
-            >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <Field label="Full Name" required>
-                  <Input
-                    placeholder="Your full name"
-                    value={basic.fullName}
-                    onChange={(e) =>
-                      setBasic({ ...basic, fullName: e.target.value })
-                    }
-                    required
-                  />
-                </Field>
-                <Field label="Phone Number" required>
-                  <Input
-                    placeholder="e.g. 9876543210"
-                    value={basic.phone}
-                    onChange={(e) =>
-                      setBasic({ ...basic, phone: e.target.value })
-                    }
-                    required
-                  />
-                </Field>
-                <Field label="Email" required>
-                  <Input
-                    type="email"
-                    placeholder="you@example.com"
-                    value={basic.email}
-                    onChange={(e) =>
-                      setBasic({ ...basic, email: e.target.value })
-                    }
-                    required
-                  />
-                </Field>
-                <Field label="Date of Birth" required>
-                  <Input
-                    type="date"
-                    value={basic.dob}
-                    onChange={(e) =>
-                      setBasic({ ...basic, dob: e.target.value })
-                    }
-                    required
-                  />
-                </Field>
-                <Field label="Instruments you teach or play" required>
-                  <Input
-                    placeholder="e.g. Tabla, Guitar, Piano"
-                    value={basic.instruments}
-                    onChange={(e) =>
-                      setBasic({ ...basic, instruments: e.target.value })
-                    }
-                    required
-                  />
-                </Field>
-                <Field label="Current City" required>
-                  <Input
-                    placeholder="e.g. Mumbai"
-                    value={basic.city}
-                    onChange={(e) =>
-                      setBasic({ ...basic, city: e.target.value })
-                    }
-                    required
-                  />
-                </Field>
-                <Field label="Pincode" required>
-                  <Input
-                    placeholder="e.g. 400001"
-                    value={basic.pincode}
-                    onChange={(e) =>
-                      setBasic({ ...basic, pincode: e.target.value })
-                    }
-                    required
-                  />
-                </Field>
-              </div>
-            </Section>
-            {error && (
-              <p className="mt-4 text-sm font-semibold text-rose-600 text-center">
-                {error}
-              </p>
-            )}
-
-            <StepNav
-              step={step}
-              total={totalSteps}
-              onBack={onBack}
-              onNext={onNext}
-              canNext={true}   // ✅ always clickable
-              submitting={submitting}
+      <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          {/* Left + Mid (logo shifted a bit left) */}
+          <div className="flex items-center justify-center gap-4 flex-grow">
+            <img
+              src={logo}
+              alt="Maestera Logo"
+              className="h-43 flex items-center justify-between object-contain"
             />
-          </motion.div>
-        ) : (
-          <motion.div
-            key="multi"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-          >
+          </div>
+        </div>
+      </header>
 
 
-            {/* Association Card */}
-            <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
-              <div className="flex items-center mb-4">
-                <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
-                <h2 className="text-lg font-semibold text-neutral-900">
-                  How you'd like to engage with Maestera?
-                </h2>
+      {/* Content */}
+      <main className="max-w-5xl mx-auto px-6 py-10">
+        <AnimatePresence mode="wait">
+          {submitted ? (
+            <motion.div
+              key="thanks"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className="w-full max-w-3xl mx-auto text-center"
+            >
+              <h2 className="text-3xl font-semibold text-neutral-900">
+                Thank you for the response
+              </h2>
+              <p className="mt-3 text-neutral-700">
+                For any queries, you can reach out to us through our website or social media platforms
+              </p>
+              <p className="mt-3 text-neutral-700">
+                We will be in touch with you!
+              </p>
+
+              {/* ✅ Social Icons instead of Button */}
+              <div className="mt-8 flex justify-center gap-8">
+                {/* WhatsApp */}
+                <a
+                  href="https://wa.me/9867229293" // replace with your number
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-500 text-4xl hover:scale-110 transition-transform"
+                >
+                  <FaWhatsapp />
+                </a>
+
+                {/* Instagram */}
+                <a
+                  href="https://www.instagram.com/maestera.music?igsh=MWhocXIwa3d6cWQ0Nw==" // replace with your IG link
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-pink-500 text-4xl hover:scale-110 transition-transform"
+                >
+                  <FaInstagram />
+                </a>
               </div>
+            </motion.div>
+          ) : step === 0 ? (
 
-              <div className="flex flex-wrap gap-6">
-                {["Education/Teaching", "Performances", "Both"].map((v) => (
-                  <Radio
-                    key={v}
-                    name="assoc"
-                    value={v}
-                    current={assoc}
-                    onChange={setAssoc}
-                    label={v}
-                  />
-                ))}
+            <motion.div
+              key="intro"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              className="w-full max-w-3xl mx-auto"
+            >
+              <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                <div className="p-8 text-center">
+                  <h1 className="text-3xl font-semibold tracking-tight text-neutral-900">
+                    Welcome to Maestera
+                  </h1>
+
+                  <p className="mt-6 text-neutral-700 leading-relaxed">
+                    Thank you for your passion for music and for contacting <br /> <strong>Maestera — India’s most flexible and inclusive platform for musicians</strong>.
+                  </p>
+
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    While our core focus is helping students learn and grow, we know that many teachers also share their art through performances.
+                  </p>
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    By being part of Maestera, you’ll have the chance to <strong>showcase not only your teaching but also your performing side </strong>— opening up opportunities with students, families, and event organizers alike.
+                  </p>
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    This quick form will take just <strong>30–60 seconds to complete.</strong>
+                  </p>
+
+                  <p className="mt-4 text-neutral-700 leading-relaxed">
+                    It helps us get to know you better so we can connect you with the right students and, where relevant, highlight your performance journey too.
+                  </p>
+
+
+                </div>
+                <div className="h-1 w-full bg-rose-600" />
+                <div className="p-6 flex items-center justify-between">
+                  <div className="text-neutral-600 text-sm">Step 1 of {totalSteps}</div>
+                  <button
+                    className="px-6 py-2.5 rounded-xl text-white"
+                    style={{ backgroundColor: brand.black }}
+                    onClick={() => setStep(1)}
+                  >
+                    Continue
+                  </button>
+                </div>
               </div>
-              {/* Collaborative Projects – common for all associations */}
+            </motion.div>
+          ) : step === 1 ? (
+            <motion.div
+              key="basic"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+            >
+              <Section
+                title="Basic Information"
 
-              <div className="mb-6">
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <Field label="Full Name" required>
+                    <Input
+                      placeholder="Your full name"
+                      value={basic.fullName}
+                      onChange={(e) =>
+                        setBasic({ ...basic, fullName: e.target.value })
+                      }
+                      required
+                    />
+                  </Field>
+                  <Field label="Phone Number" required>
+                    <Input
+                      placeholder="e.g. 9876543210"
+                      value={basic.phone}
+                      onChange={(e) =>
+                        setBasic({ ...basic, phone: e.target.value })
+                      }
+                      required
+                    />
+                  </Field>
+                  <Field label="Email" required>
+                    <Input
+                      type="email"
+                      placeholder="you@example.com"
+                      value={basic.email}
+                      onChange={(e) =>
+                        setBasic({ ...basic, email: e.target.value })
+                      }
+                      required
+                    />
+                  </Field>
+                  <Field label="Date of Birth" required>
+                    <Input
+                      type="date"
+                      value={basic.dob}
+                      onChange={(e) =>
+                        setBasic({ ...basic, dob: e.target.value })
+                      }
+                      required
+                    />
+                  </Field>
+                  <Field label="Instruments you teach or play" required>
+                    <Input
+                      placeholder="e.g. Tabla, Guitar, Piano"
+                      value={basic.instruments}
+                      onChange={(e) =>
+                        setBasic({ ...basic, instruments: e.target.value })
+                      }
+                      required
+                    />
+                  </Field>
+                  <Field label="Current City" required>
+                    <Input
+                      placeholder="e.g. Mumbai"
+                      value={basic.city}
+                      onChange={(e) =>
+                        setBasic({ ...basic, city: e.target.value })
+                      }
+                      required
+                    />
+                  </Field>
+                  <Field label="Pincode" required>
+                    <Input
+                      placeholder="e.g. 400001"
+                      value={basic.pincode}
+                      onChange={(e) =>
+                        setBasic({ ...basic, pincode: e.target.value })
+                      }
+                      required
+                    />
+                  </Field>
+                </div>
+              </Section>
+              {error && (
+                <p className="mt-4 text-sm font-semibold text-rose-600 text-center">
+                  {error}
+                </p>
+              )}
+
+              <StepNav
+                step={step}
+                total={totalSteps}
+                onBack={onBack}
+                onNext={onNext}
+                canNext={true}   // ✅ always clickable
+                submitting={submitting}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="multi"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+            >
+
+
+              {/* Association Card */}
+              <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
                 <div className="flex items-center mb-4">
-                  <span className="inline-block h-6 w-1 rounded bg-[#D10043] mr-2" />
-                  <h3 className="text-neutral-900 font-semibold">
-                    Would you be open to participating in collaborative music projects as below?
-                    <span className="text-neutral-500 ml-1">(multiple options can be selected)</span>
-                  </h3>
+                  <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
+                  <h2 className="text-lg font-semibold text-neutral-900">
+                    How you'd like to engage with Maestera?
+                  </h2>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-3">
-                  {["Orchestra", "Choirs", "Theatre", "Ensembles", "Other"].map((label) => (
-                    <Checkbox
-                      key={label}
-                      label={label}
-                      checked={multi.collabProjects.has(label)}
-                      onChange={() => toggle("collabProjects", label)}
+                <div className="flex flex-wrap gap-6">
+                  {["Education/Teaching", "Performances", "Both"].map((v) => (
+                    <Radio
+                      key={v}
+                      name="assoc"
+                      value={v}
+                      current={assoc}
+                      onChange={setAssoc}
+                      label={v}
                     />
                   ))}
-
-                  {/* None of the above */}
-                  <Checkbox
-                    label="None of the above"
-                    checked={multi.collabProjects.has("None")}
-                    onChange={() => {
-                      if (!multi.collabProjects.has("None")) {
-                        // Clear all and only keep "None"
-                        setMulti({ ...multi, collabProjects: new Set(["None"]) });
-                      } else {
-                        toggle("collabProjects", "None");
-                      }
-                    }}
-                  />
                 </div>
+                {/* Collaborative Projects – common for all associations */}
+
+                <div className="mb-6">
+                  <div className="flex items-center mb-4">
+                    <span className="inline-block h-6 w-1 rounded bg-[#D10043] mr-2" />
+                    <h3 className="text-neutral-900 font-semibold">
+                      Would you be open to participating in collaborative music projects as below?
+                      <span className="text-neutral-500 ml-1">(multiple options can be selected)</span>
+                    </h3>
+                  </div>
+
+                  <div className="grid sm:grid-cols-2 gap-3">
+                    {["Orchestra", "Choirs", "Theatre", "Ensembles", "Other"].map((label) => (
+                      <Checkbox
+                        key={label}
+                        label={label}
+                        checked={multi.collabProjects.has(label)}
+                        onChange={() => toggle("collabProjects", label)}
+                      />
+                    ))}
+
+                    {/* None of the above */}
+                    <Checkbox
+                      label="None of the above"
+                      checked={multi.collabProjects.has("None")}
+                      onChange={() => {
+                        if (!multi.collabProjects.has("None")) {
+                          // Clear all and only keep "None"
+                          setMulti({ ...multi, collabProjects: new Set(["None"]) });
+                        } else {
+                          toggle("collabProjects", "None");
+                        }
+                      }}
+                    />
+                  </div>
+                </div>
+
               </div>
 
-            </div>
 
-
-            {/* Initialize question counter */}
-            {(() => {
-              let q = 1;
-              return (
-                <>
-                  {/* Education/Teaching or Both */}
-                  {(assoc === "Education/Teaching" || assoc === "Both") && (
-                    <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
-                      <h3 className="text-neutral-900 font-semibold mb-2">Education / Teaching</h3>
-                      <div className="space-y-6">
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">{q++}. What class formats do you currently teach or would be open to?</p>
-                          <div className="grid sm:grid-cols-2 gap-3">
-                            {[
-                              "Individual classes - Online",
-                              "Individual Classes - Teacher's Place",
-                              "Individual Classes - Student's Place",
-                              "Group classes - Online",
-                              "Group Classes - Teacher's Place",
-                              "None of the above - I don't teach",
-                              "Other",
-                            ].map((label) => (
-                              <Checkbox
-                                key={label}
-                                label={label}
-                                checked={multi.classFormats.has(label)}
-                                onChange={() => toggle("classFormats", label)}
-                              />
-                            ))}
+              {/* Initialize question counter */}
+              {(() => {
+                let q = 1;
+                return (
+                  <>
+                    {/* Education/Teaching or Both */}
+                    {(assoc === "Education/Teaching" || assoc === "Both") && (
+                      <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
+                        <h3 className="text-neutral-900 font-semibold mb-2">Education / Teaching</h3>
+                        <div className="space-y-6">
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">{q++}. What class formats do you currently teach or would be open to?</p>
+                            <div className="grid sm:grid-cols-2 gap-3">
+                              {[
+                                "Individual classes - Online",
+                                "Individual Classes - Teacher's Place",
+                                "Individual Classes - Student's Place",
+                                "Group classes - Online",
+                                "Group Classes - Teacher's Place",
+                                "None of the above - I don't teach",
+                                "Other",
+                              ].map((label) => (
+                                <Checkbox
+                                  key={label}
+                                  label={label}
+                                  checked={multi.classFormats.has(label)}
+                                  onChange={() => toggle("classFormats", label)}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
 
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">{q++}. Do you provide, or open to providing, training for any of these exams?</p>
-                          <div className="grid sm:grid-cols-2 gap-3">
-                            {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map((label) => (
-                              <Checkbox
-                                key={label}
-                                label={label}
-                                checked={multi.exams.has(label)}
-                                onChange={() => toggle("exams", label)}
-                              />
-                            ))}
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">{q++}. Do you provide, or open to providing, training for any of these exams?</p>
+                            <div className="grid sm:grid-cols-2 gap-3">
+                              {["Trinity", "ABRSM", "Rockschool", "NTB", "None of the above - I don't teach", "Other"].map((label) => (
+                                <Checkbox
+                                  key={label}
+                                  label={label}
+                                  checked={multi.exams.has(label)}
+                                  onChange={() => toggle("exams", label)}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
 
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">{q++}. Which additional formats would you like to be involved in with Maestera?</p>
-                          <div className="grid sm:grid-cols-2 gap-3">
-                            {["Certificate Courses", "Workshops", "Masterclass", "Teach/Work at educational institutions", "Online classes - Students residing abroad", "None of the above - I don't teach", "Other"].map((label) => (
-                              <Checkbox
-                                key={label}
-                                label={label}
-                                checked={multi.additionalFormats.has(label)}
-                                onChange={() => toggle("additionalFormats", label)}
-                              />
-                            ))}
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">{q++}. Which additional formats would you like to be involved in with Maestera?</p>
+                            <div className="grid sm:grid-cols-2 gap-3">
+                              {["Certificate Courses", "Workshops", "Masterclass", "Teach/Work at educational institutions", "Online classes - Students residing abroad", "None of the above - I don't teach", "Other"].map((label) => (
+                                <Checkbox
+                                  key={label}
+                                  label={label}
+                                  checked={multi.additionalFormats.has(label)}
+                                  onChange={() => toggle("additionalFormats", label)}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
 
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">{q++}. Which of these learner groups are you confident in teaching?</p>
-                          <div className="grid sm:grid-cols-2 gap-3">
-                            {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
-                              <Checkbox
-                                key={label}
-                                label={label}
-                                checked={multi.learnerGroups.has(label)}
-                                onChange={() => toggle("learnerGroups", label)}
-                              />
-                            ))}
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">{q++}. Which of these learner groups are you confident in teaching?</p>
+                            <div className="grid sm:grid-cols-2 gap-3">
+                              {["Children", "Specially Abled", "Senior Citizen"].map((label) => (
+                                <Checkbox
+                                  key={label}
+                                  label={label}
+                                  checked={multi.learnerGroups.has(label)}
+                                  onChange={() => toggle("learnerGroups", label)}
+                                />
+                              ))}
+                            </div>
                           </div>
-                        </div>
 
-                        {/* Teaching Fee */}
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">Teaching fees per hour</p>
-                          <Input
-                            type="number"
-                            className="max-w-xs"
-                            placeholder="Fees in ₹"
-                            value={basic.teachingFee || ""}
-                            onChange={(e) =>
-                              setBasic({ ...basic, teachingFee: e.target.value })
-                            }
-                          />
-                        </div>
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">
-                            Any other way you would like to contribute/associate?{" "}
-                            <span className="text-neutral-500">(Optional)</span>
-                          </p>
-                          <input
-                            type="text"
-                            placeholder="Your answer"
-                            className="w-full border border-neutral-300 rounded-lg p-2"
-                            value={basic.contribution || ""}
-                            onChange={(e) => {
-                              const val = e.target.value.trimStart(); // optional: avoid leading spaces
-                              setBasic((prev) => ({ ...prev, contribution: val }));
-                              console.log("Contribution updated:", val); // live debug
-                            }}
-                          />
-                        </div>
-
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Performances or Both */}
-                  {(assoc === "Performances" || assoc === "Both") && (
-                    <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
-                      <h3 className="text-neutral-900 font-semibold mb-2">Performances</h3>
-                      <div className="space-y-6">
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">{q++}. Please select the performance settings you are currently active in, or open to exploring?</p>
-                          <div className="grid sm:grid-cols-2 gap-3">
-                            {["Corporates", "Restaurants/Hotels/Cafes", "Social gatherings", "Weddings", "Cultural events", "Religious"].map((label) => (
-                              <Checkbox
-                                key={label}
-                                label={label}
-                                checked={multi.performanceSettings.has(label)}
-                                onChange={() => toggle("performanceSettings", label)}
-                              />
-                            ))}
+                          {/* Teaching Fee */}
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">Teaching fees per hour</p>
+                            <Input
+                              type="number"
+                              className="max-w-xs"
+                              placeholder="Fees in ₹"
+                              value={basic.teachingFee || ""}
+                              onChange={(e) =>
+                                setBasic({ ...basic, teachingFee: e.target.value })
+                              }
+                            />
                           </div>
-                        </div>
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">
+                              Any other way you would like to contribute/associate?{" "}
+                              <span className="text-neutral-500">(Optional)</span>
+                            </p>
+                            <input
+                              type="text"
+                              placeholder="Your answer"
+                              className="w-full border border-neutral-300 rounded-lg p-2"
+                              value={basic.contribution || ""}
+                              onChange={(e) => {
+                                const val = e.target.value.trimStart(); // optional: avoid leading spaces
+                                setBasic((prev) => ({ ...prev, contribution: val }));
+                                console.log("Contribution updated:", val); // live debug
+                              }}
+                            />
+                          </div>
 
-
-
-                        {/* Performance Fee */}
-                        <div>
-                          <p className="font-medium text-neutral-900 mb-2">Performance fees per hour</p>
-                          <Input
-                            type="number"
-                            className="max-w-xs"
-                            placeholder="Fees in ₹"
-                            value={basic.performanceFee || ""}
-                            onChange={(e) =>
-                              setBasic({ ...basic, performanceFee: e.target.value })
-                            }
-                          />
                         </div>
                       </div>
-                    </div>
-                  )}
-                </>
-              );
-            })()}
+                    )}
+
+                    {/* Performances or Both */}
+                    {(assoc === "Performances" || assoc === "Both") && (
+                      <div className="bg-white border border-neutral-200 rounded-2xl p-6 space-y-6 mb-8">
+                        <h3 className="text-neutral-900 font-semibold mb-2">Performances</h3>
+                        <div className="space-y-6">
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">{q++}. Please select the performance settings you are currently active in, or open to exploring?</p>
+                            <div className="grid sm:grid-cols-2 gap-3">
+                              {["Corporates", "Restaurants/Hotels/Cafes", "Social gatherings", "Weddings", "Cultural events", "Religious"].map((label) => (
+                                <Checkbox
+                                  key={label}
+                                  label={label}
+                                  checked={multi.performanceSettings.has(label)}
+                                  onChange={() => toggle("performanceSettings", label)}
+                                />
+                              ))}
+                            </div>
+                          </div>
 
 
-            {error && (
-              <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
-            )}
 
-            <StepNav
-              step={step}
-              total={totalSteps}
-              onBack={onBack}
-              onNext={onNext}
-              canNext={canNext}
-              submitting={submitting}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </main>
+                          {/* Performance Fee */}
+                          <div>
+                            <p className="font-medium text-neutral-900 mb-2">Performance fees per hour</p>
+                            <Input
+                              type="number"
+                              className="max-w-xs"
+                              placeholder="Fees in ₹"
+                              value={basic.performanceFee || ""}
+                              onChange={(e) =>
+                                setBasic({ ...basic, performanceFee: e.target.value })
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
 
-    {/* Footer */}
-    <footer className="mt-16">
-      <div className="h-[5px] w-full bg-rose-600" />
-      <div className="py-6 text-center text-xs text-neutral-600">
-        © {new Date().getFullYear()} Maestera • Made with ♫
-      </div>
-    </footer>
-  </div>
-);
 
+              {error && (
+                <p className="mt-4 text-sm text-rose-600 text-center">{error}</p>
+              )}
+
+              <StepNav
+                step={step}
+                total={totalSteps}
+                onBack={onBack}
+                onNext={onNext}
+                canNext={canNext}
+                submitting={submitting}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+
+      {/* Footer */}
+      <footer className="mt-16">
+        <div className="h-[5px] w-full bg-rose-600" />
+        <div className="py-6 text-center text-xs text-neutral-600">
+          © {new Date().getFullYear()} Maestera • Made with ♫
+        </div>
+      </footer>
+    </div>
+  );
+}
