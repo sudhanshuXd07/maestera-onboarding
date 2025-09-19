@@ -278,7 +278,13 @@ export default function App() {
   const validateStep2 = () => {
     let errors = [];
 
-    if ((assoc === "Education/Teaching" || assoc === "Both")) {
+    // Association required
+    if (!assoc) {
+      errors.push("Please select how you'd like to engage with Maestera.");
+    }
+
+    // Education/Teaching
+    if (assoc === "Education/Teaching" || assoc === "Both") {
       if (multi.classFormats.size === 0)
         errors.push("Please select at least one option for class formats.");
       if (multi.exams.size === 0)
@@ -289,16 +295,18 @@ export default function App() {
         errors.push("Please select at least one learner group.");
       if (!basic.teachingFee)
         errors.push("Please enter your teaching fees.");
-      // contribution is optional, so skip
+      // contribution is optional, so no validation
     }
 
-    if ((assoc === "Performances" || assoc === "Both")) {
+    // Performances
+    if (assoc === "Performances" || assoc === "Both") {
       if (multi.performanceSettings.size === 0)
         errors.push("Please select at least one performance setting.");
       if (!basic.performanceFee)
         errors.push("Please enter your performance fees.");
     }
 
+    // Collaborative projects (common for all)
     if (multi.collabProjects.size === 0) {
       errors.push("Please select at least one collaborative project option.");
     }
@@ -779,4 +787,4 @@ return (
     </footer>
   </div>
 );
-}
+
