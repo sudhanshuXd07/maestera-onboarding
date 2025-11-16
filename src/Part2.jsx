@@ -220,14 +220,6 @@ export default function Part2() {
                       </option>
                     ))}
                   </select>
-
-                  {row.instrument === "other" && (
-                  <input
-                    className="w-full border rounded-xl p-2.5 mt-3"
-                    placeholder="Enter custom instrument"
-                    value={row.customInstrument || ""}
-                    onChange={(e) => updateRow(i, "customInstrument", e.target.value)}
-                    />
                 </div>
 
                 {/* Teach or Perform */}
