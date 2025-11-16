@@ -17,7 +17,7 @@ export default function Part2() {
     {
       instrument: "",
       action: "", // 'teach' or 'perform'
-      offlineOnline: "", // 'online' | 'offline' (for teach only)
+      offlineOnline: "", // 'online' | 'offline' (for teach)
       beginner: "",
       intermediate: "",
       advanced: "",
