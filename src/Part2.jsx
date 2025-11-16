@@ -326,8 +326,18 @@ export default function Part2() {
               </div>
             ))}
 
-             <div className="mb-4">
-                <label className="flex items-center gap-3 cursor-pointer select-none">
+            <div className="flex flex-col md:flex-row gap-4">
+              <button
+                type="button"
+                onClick={addRow}
+                className="flex-1 px-6 py-2.5 rounded-xl text-white"
+                style={{ backgroundColor: "#0a0a0a" }}
+              >
+                + Add Another Instrument
+              </button>
+
+              <div className="border rounded-xl p-5 mb-6 bg-neutral-50">
+                <label className="flex items-center gap-3 cursor-pointer select-none mb-4">
                   <input
                     type="checkbox"
                     checked={outsideIndia}
@@ -355,17 +365,6 @@ export default function Part2() {
                   />
                 </div>
             )}
-
-            <div className="flex flex-col md:flex-row gap-4">
-              <button
-                type="button"
-                onClick={addRow}
-                className="flex-1 px-6 py-2.5 rounded-xl text-white"
-                style={{ backgroundColor: "#0a0a0a" }}
-              >
-                + Add Another Instrument
-              </button>
-
 
 
               <button
