@@ -162,6 +162,24 @@ export default function Part2() {
           <div className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-sm border border-neutral-200 p-8">
             <h2 className="text-2xl font-semibold text-neutral-900 mb-6">Additional Details</h2>
 
+            <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-5 mb-6">
+              <h3 className="text-lg font-semibold text-neutral-900 mb-3">Guidelines</h3>
+
+              <ul className="list-disc pl-6 space-y-2 text-neutral-700 text-sm">
+                <li>
+                  <strong>For a smooth experience:</strong> Use the same <strong>Full Name</strong> and
+                  <strong> Phone Number</strong> you shared earlier in the onboarding form.
+                </li>
+                <li>
+                  <strong>Teaching both online and offline?</strong>
+                  Create <strong>two separate cards</strong> for the same instrument — one marked
+                  <span className="font-medium"> Online</span> and one marked 
+                  <span className="font-medium"> Offline</span>.
+                  <br />You can add as many instrument cards as needed.
+                </li>
+              </ul>
+            </div>
+
             {/* Full Name */}
             <div className="mb-4">
               <label className="block text-sm font-medium text-neutral-800 mb-1">
@@ -170,7 +188,7 @@ export default function Part2() {
               <input
                 className="w-full rounded-xl border border-neutral-300 px-4 py-2.5 placeholder-neutral-400 bg-white"
                 value={name}
-                placeholder="Enter the same name as Part 1"
+                placeholder="Your Full Name"
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
@@ -183,7 +201,7 @@ export default function Part2() {
               <input
                 className="w-full rounded-xl border border-neutral-300 px-4 py-2.5 placeholder-neutral-400 bg-white"
                 value={phone}
-                placeholder="Enter the same phone number as Part 1"
+                placeholder="e.g. 9876543210"
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
