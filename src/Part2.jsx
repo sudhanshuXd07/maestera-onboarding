@@ -171,7 +171,7 @@ export default function Part2() {
                   <strong> Phone Number</strong> you shared earlier in the onboarding form.
                 </li>
                 <li>
-                  <strong>Teaching both online and offline?</strong>
+                  <strong>Teaching both online and offline? </strong>
                   Create <strong>two separate cards</strong> for the same instrument — one marked
                   <span className="font-medium"> Online</span> and one marked 
                   <span className="font-medium"> Offline</span>.
