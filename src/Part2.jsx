@@ -1,6 +1,51 @@
 import React, { useState } from "react";
+import logo from "./assets/logomaestera.jpeg";
+import { FaWhatsapp, FaInstagram } from "react-icons/fa";
 
-// ================= INSTRUMENT LIST (same as onboarding) =================
+// BRAND COLORS
+const brand = {
+  black: "#0a0a0a",
+  red: "#e11d48",
+  offwhite: "#fafafa",
+};
+
+// SHARED COMPONENTS (copied from Part 1)
+const Section = ({ title, subtitle, children }) => (
+  <div className="w-full max-w-3xl mx-auto">
+    <div className="flex items-center mb-2 ">
+      <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
+      <h2 className="text-2xl font-semibold text-[#0a0a0a] tracking-tight">
+        {title}
+      </h2>
+    </div>
+
+    {subtitle && (
+      <div className="w-full text-left">
+        <p className="mt-1 text-sm text-neutral-600">{subtitle}</p>
+      </div>
+    )}
+
+    <div className="mt-5 space-y-4 text-left">{children}</div>
+  </div>
+);
+
+const Field = ({ label, required, children }) => (
+  <label className="block">
+    <span className="text-sm font-medium text-neutral-800">
+      {label} {required && <span className="text-rose-600">*</span>}
+    </span>
+    <div className="mt-2">{children}</div>
+  </label>
+);
+
+const Input = (props) => (
+  <input
+    {...props}
+    className="w-full rounded-xl border border-neutral-300 px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-rose-100 focus:border-rose-600 placeholder-neutral-400 bg-white"
+  />
+);
+
+// INSTRUMENT LIST (same as Part 1)
 const INSTRUMENTS = [
   "Accordion","Acoustic Guitar","Alto Saxophone","Bagpipes","Banjo","Baritone Saxophone",
   "Bass Clarinet","Bass Drum","Bass Guitar","Bassoon","Bhajan","Bongos","Cabasa","Cajón",
@@ -22,14 +67,34 @@ const INSTRUMENTS = [
   "Viola","Violin","Western Vocals","Xylophone","Zither"
 ];
 
-// ================= SEARCHABLE DROPDOWN =================
-const SearchableDropdown = ({ value, onChange, options, placeholder }) => {
+// SEARCHABLE MULTI DROPDOWN (same look as Part 1)
+const SearchableDropdown = ({ value, onChange, options }) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [other, setOther] = useState("");
+
+  const selected = value ? value.split(", ") : [];
 
   const filtered = options.filter((o) =>
     o.toLowerCase().includes(query.toLowerCase())
   );
+
+  const toggle = (item) => {
+    let next;
+    if (selected.includes(item)) {
+      next = selected.filter((i) => i !== item);
+    } else {
+      next = [...selected, item];
+    }
+    onChange(next.join(", "));
+  };
+
+  const addOther = () => {
+    if (!other.trim()) return;
+    const next = [...selected, other.trim()];
+    onChange(next.join(", "));
+    setOther("");
+  };
 
   return (
     <div className="relative w-full">
@@ -37,14 +102,14 @@ const SearchableDropdown = ({ value, onChange, options, placeholder }) => {
         className="border rounded-xl px-4 py-2.5 bg-white cursor-pointer"
         onClick={() => setOpen(!open)}
       >
-        {value || placeholder}
+        {selected.length > 0 ? selected.join(", ") : "Select instruments"}
       </div>
 
       {open && (
         <div className="absolute w-full mt-2 bg-white border rounded-xl shadow-lg max-h-56 overflow-y-auto p-3 z-20">
           <input
             className="w-full border rounded-lg p-2 mb-3"
-            placeholder="Search..."
+            placeholder="Search instrument..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -52,31 +117,46 @@ const SearchableDropdown = ({ value, onChange, options, placeholder }) => {
           {filtered.map((item) => (
             <div
               key={item}
-              className="p-2 hover:bg-neutral-100 rounded cursor-pointer"
-              onClick={() => {
-                onChange(item);
-                setOpen(false);
-              }}
+              className="p-2 hover:bg-neutral-100 rounded cursor-pointer flex justify-between"
+              onClick={() => toggle(item)}
             >
-              {item}
+              <span>{item}</span>
+              {selected.includes(item) && <span>✔</span>}
             </div>
           ))}
+
+          <div className="mt-3 border-t pt-3">
+            <input
+              className="w-full border rounded-lg p-2"
+              placeholder="Other instrument"
+              value={other}
+              onChange={(e) => setOther(e.target.value)}
+            />
+
+            <button
+              className="mt-2 bg-black text-white py-1.5 w-full rounded-lg"
+              onClick={addOther}
+            >
+              Add
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
 };
 
-// ================= MAIN FORM =================
-export default function OnboardingPart2() {
+// ⭐ FULLY STYLED PART 2 PAGE
+export default function Part2() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  const [instrumentRows, setInstrumentRows] = useState([
+  const [rows, setRows] = useState([
     {
-      instrument: "",
-      type: "", // Perform or Teach
-      mode: "", // Offline / Online (only if Teach)
+      instruments: "",
+      type: "",
+      mode: "",
       beginner: "",
       intermediate: "",
       advanced: "",
@@ -84,17 +164,11 @@ export default function OnboardingPart2() {
     },
   ]);
 
-  const updateRow = (index, field, value) => {
-    const updated = [...instrumentRows];
-    updated[index][field] = value;
-    setInstrumentRows(updated);
-  };
-
   const addRow = () => {
-    setInstrumentRows([
-      ...instrumentRows,
+    setRows([
+      ...rows,
       {
-        instrument: "",
+        instruments: "",
         type: "",
         mode: "",
         beginner: "",
@@ -105,126 +179,34 @@ export default function OnboardingPart2() {
     ]);
   };
 
-  return (
-    <div className="max-w-3xl mx-auto p-6 space-y-10">
-      <h1 className="text-3xl font-semibold">Onboarding — Part 2</h1>
+  const updateRow = (i, field, value) => {
+    const updated = [...rows];
+    updated[i][field] = value;
+    setRows(updated);
+  };
 
-      {/* USER IDENTIFICATION */}
-      <div className="space-y-4">
-        <div>
-          <label className="font-medium">Full Name</label>
-          <input
-            className="w-full border px-4 py-2 rounded-xl"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
+  const submitForm = () => {
+    setSubmitted(true);
+  };
 
-        <div>
-          <label className="font-medium">Phone Number</label>
-          <input
-            className="w-full border px-4 py-2 rounded-xl"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </div>
+  if (submitted) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center" style={{ backgroundColor: brand.offwhite }}>
+        <h2 className="text-3xl font-semibold text-neutral-900">Thank you for your response</h2>
       </div>
+    );
+  }
 
-      {/* INSTRUMENT ENTRIES */}
-      {instrumentRows.map((row, idx) => (
-        <div key={idx} className="border rounded-2xl p-5 space-y-4 bg-white shadow-sm">
-          <h3 className="font-semibold text-lg">Instrument #{idx + 1}</h3>
-
-          {/* Select Instrument */}
-          <SearchableDropdown
-            value={row.instrument}
-            onChange={(v) => updateRow(idx, "instrument", v)}
-            options={INSTRUMENTS}
-            placeholder="Select instrument"
-          />
-
-          {/* Perform or Teach */}
-          <div>
-            <label className="font-medium">Do you want to Perform or Teach?</label>
-            <select
-              className="w-full border px-4 py-2 rounded-xl mt-2"
-              value={row.type}
-              onChange={(e) => updateRow(idx, "type", e.target.value)}
-            >
-              <option value="">Select option</option>
-              <option value="Perform">Perform</option>
-              <option value="Teach">Teach</option>
-            </select>
+  return (
+    <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
+      {/* Header */}
+      <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center justify-center gap-4 flex-grow">
+            <img src={logo} alt="Maestera Logo" className="h-43 object-contain" />
           </div>
-
-          {/* If Perform */}
-          {row.type === "Perform" && (
-            <div>
-              <label className="font-medium">Performance Fee per hour</label>
-              <input
-                className="w-full border px-4 py-2 rounded-xl mt-2"
-                type="number"
-                value={row.performanceFee}
-                onChange={(e) => updateRow(idx, "performanceFee", e.target.value)}
-              />
-            </div>
-          )}
-
-          {/* If Teach */}
-          {row.type === "Teach" && (
-            <div className="space-y-4">
-              <div>
-                <label className="font-medium">Mode</label>
-                <select
-                  className="w-full border px-4 py-2 rounded-xl mt-2"
-                  value={row.mode}
-                  onChange={(e) => updateRow(idx, "mode", e.target.value)}
-                >
-                  <option value="">Select</option>
-                  <option value="Online">Online</option>
-                  <option value="Offline">Offline</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="font-medium">Beginner Fee/hr</label>
-                <input
-                  className="w-full border px-4 py-2 rounded-xl"
-                  type="number"
-                  value={row.beginner}
-                  onChange={(e) => updateRow(idx, "beginner", e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="font-medium">Intermediate Fee/hr</label>
-                <input
-                  className="w-full border px-4 py-2 rounded-xl"
-                  type="number"
-                  value={row.intermediate}
-                  onChange={(e) => updateRow(idx, "intermediate", e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="font-medium">Advanced Fee/hr</label>
-                <input
-                  className="w-full border px-4 py-2 rounded-xl"
-                  type="number"
-                  value={row.advanced}
-                  onChange={(e) => updateRow(idx, "advanced", e.target.value)}
-                />
-              </div>
-            </div>
-          )}
         </div>
-      ))}
+      </header>
 
-      {/* ADD ANOTHER INSTRUMENT */}
-      <button
-        className="px-6 py-3 bg-black text-white rounded-xl"
-        onClick={addRow}
-      >
-        + Add Another Instrument
-      </button>
-    </div>
-  );
-}
+      {/* Main */}
+      <main className="max-w-5
