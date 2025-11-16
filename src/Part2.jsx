@@ -162,4 +162,4 @@ export default function Part2() {
                       >
                         <option value="">Select</option>
                         <option value="online">Online</option>
-                        <option value="offline">Offline
+                        <option value="offline">Offline</option>
