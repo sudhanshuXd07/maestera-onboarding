@@ -10,6 +10,9 @@ export default function Part2() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
 
+  const [outsideIndia, setOutsideIndia] = useState(false);
+  const [premiumFee, setPremiumFee] = useState("");
+
   const [rows, setRows] = useState([
     {
       instrument: "",
@@ -332,6 +335,37 @@ export default function Part2() {
               >
                 + Add Another Instrument
               </button>
+
+              <div className="mb-4">
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={outsideIndia}
+                    onChange={(e) => setOutsideIndia(e.target.checked)}
+                    className="h-5 w-5 rounded-md border-neutral-300 text-rose-600 focus:ring-rose-600"
+                />
+                  <span className="text-sm text-neutral-800">
+                    Do you offer online classes to students outside India?
+                  </span>
+                </label>
+              </div>
+
+              {outsideIndia && (
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-neutral-800 mb-1">
+                    Additional premium fee charged for students outside India (₹)
+                  </label>
+                  <input
+                    type="number"
+                    className="w-full border rounded-xl p-2.5"
+                    placeholder="Enter premium fee"
+                    value={premiumFee}
+                    onChange={(e) => setPremiumFee(e.target.value)}
+                    required
+                  />
+                </div>
+            )}
+
 
               <button
                 type="button"
