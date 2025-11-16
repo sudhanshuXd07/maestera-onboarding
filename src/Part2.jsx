@@ -1,212 +1,160 @@
 import React, { useState } from "react";
 import logo from "./assets/logomaestera.jpeg";
-import { FaWhatsapp, FaInstagram } from "react-icons/fa";
 
-// BRAND COLORS
-const brand = {
-  black: "#0a0a0a",
-  red: "#e11d48",
-  offwhite: "#fafafa",
-};
-
-// SHARED COMPONENTS (copied from Part 1)
-const Section = ({ title, subtitle, children }) => (
-  <div className="w-full max-w-3xl mx-auto">
-    <div className="flex items-center mb-2 ">
-      <span className="inline-block h-6 w-1 rounded bg-rose-600 mr-2" />
-      <h2 className="text-2xl font-semibold text-[#0a0a0a] tracking-tight">
-        {title}
-      </h2>
-    </div>
-
-    {subtitle && (
-      <div className="w-full text-left">
-        <p className="mt-1 text-sm text-neutral-600">{subtitle}</p>
-      </div>
-    )}
-
-    <div className="mt-5 space-y-4 text-left">{children}</div>
-  </div>
-);
-
-const Field = ({ label, required, children }) => (
-  <label className="block">
-    <span className="text-sm font-medium text-neutral-800">
-      {label} {required && <span className="text-rose-600">*</span>}
-    </span>
-    <div className="mt-2">{children}</div>
-  </label>
-);
-
-const Input = (props) => (
-  <input
-    {...props}
-    className="w-full rounded-xl border border-neutral-300 px-4 py-2.5 focus:outline-none focus:ring-4 focus:ring-rose-100 focus:border-rose-600 placeholder-neutral-400 bg-white"
-  />
-);
-
-// INSTRUMENT LIST (same as Part 1)
 const INSTRUMENTS = [
-  "Accordion","Acoustic Guitar","Alto Saxophone","Bagpipes","Banjo","Baritone Saxophone",
-  "Bass Clarinet","Bass Drum","Bass Guitar","Bassoon","Bhajan","Bongos","Cabasa","Cajón",
-  "Carnatic Vocals","Castanets","Celesta","Cello","Cello Banjo","Chalumeau","Cimbalom",
-  "Clarinet","Claves","Clavichord","Composition","Congas","Contrabassoon","Cornet",
-  "Cowbell","Crwth","Cymbals","Dholak","Dholki","Didgeridoo","Digital Piano","DJ","Djembe",
-  "Dotara","Double Bass","Drums","Dulcimer","Electric Bass","Electric Guitar",
-  "Electric Organ","Electric Piano","English Horn","Euphonium","Ewe Drum","Fife",
-  "Flugelhorn","Flute","Folk","French Horn","Ghazal","Glass Armonica","Glockenspiel",
-  "Grand Piano","Guiro","Guitar","Hang Drum","Hardanger Fiddle","Harmonica",
-  "Harmonium","Harp","Harpsichord","Hindustani Vocals","Jaltarang","Jaw Harp","Kalimba",
-  "Kantele","Keyboard","Koto","Lute","Mandolin","Marimba","Mbira","Mellotron","Melodica",
-  "Morin Khuur","Mridangam","Music Production","Music Theory","Musical Saw","Nyckelharpa",
-  "Oboe","Ocarina","Organ","Pan Flute","Percussion","Piano","Piccolo","Pipa",
-  "Rabindra Sangeet","Raga","Recorder","Sarod","Saxophone","Saz","Shamisen","Shofar",
-  "Sitar","Snare Drum","Sousaphone","Spoons","Steel Drum","Stroh Violin","Synthesizer",
-  "Tabla","Tambourine","Tenor Saxophone","Theremin","Timbales","Timpani","Tom-Tom",
-  "Triangle","Trombone","Trumpet","Tuba","Ukulele","Upright Piano","Veena","Vibraphone",
-  "Viola","Violin","Western Vocals","Xylophone","Zither"
+  "Accordion","Acoustic Guitar","Alto Saxophone","Bagpipes","Banjo","Baritone Saxophone","Bass Clarinet","Bass Drum","Bass Guitar","Bassoon","Bhajan","Bongos","Cabasa","Cajón","Carnatic Vocals","Castanets","Celesta","Cello","Cello Banjo","Chalumeau","Cimbalom","Clarinet","Claves","Clavichord","Composition","Congas","Contrabassoon","Cornet","Cowbell","Crwth","Cymbals","Dholak","Dholki","Didgeridoo","Digital Piano","DJ","Djembe","Dotara","Double Bass","Drums","Dulcimer","Electric Bass","Electric Guitar","Electric Organ","Electric Piano","English Horn","Euphonium","Ewe Drum","Fife","Flugelhorn","Flute","Folk","French Horn","Ghazal","Glass Armonica","Glockenspiel","Grand Piano","Guiro","Guitar","Hang Drum","Hardanger Fiddle","Harmonica","Harmonium","Harp","Harpsichord","Hindustani Vocals","Jaltarang","Jaw Harp","Kalimba","Kantele","Keyboard","Koto","Lute","Mandolin","Marimba","Mbira","Mellotron","Melodica","Morin Khuur","Mridangam","Music Production","Music Theory","Musical Saw","Nyckelharpa","Oboe","Ocarina","Organ","Pan Flute","Percussion","Piano","Piccolo","Pipa","Rabindra Sangeet","Raga","Recorder","Sarod","Saxophone","Saz","Shamisen","Shofar","Sitar","Snare Drum","Sousaphone","Spoons","Steel Drum","Stroh Violin","Synthesizer","Tabla","Tambourine","Tenor Saxophone","Theremin","Timbales","Timpani","Tom-Tom","Triangle","Trombone","Trumpet","Tuba","Ukulele","Upright Piano","Veena","Vibraphone","Viola","Violin","Western Vocals","Xylophone","Zither"
 ];
 
-// SEARCHABLE MULTI DROPDOWN (same look as Part 1)
-const SearchableDropdown = ({ value, onChange, options }) => {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const [other, setOther] = useState("");
-
-  const selected = value ? value.split(", ") : [];
-
-  const filtered = options.filter((o) =>
-    o.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const toggle = (item) => {
-    let next;
-    if (selected.includes(item)) {
-      next = selected.filter((i) => i !== item);
-    } else {
-      next = [...selected, item];
-    }
-    onChange(next.join(", "));
-  };
-
-  const addOther = () => {
-    if (!other.trim()) return;
-    const next = [...selected, other.trim()];
-    onChange(next.join(", "));
-    setOther("");
-  };
-
-  return (
-    <div className="relative w-full">
-      <div
-        className="border rounded-xl px-4 py-2.5 bg-white cursor-pointer"
-        onClick={() => setOpen(!open)}
-      >
-        {selected.length > 0 ? selected.join(", ") : "Select instruments"}
-      </div>
-
-      {open && (
-        <div className="absolute w-full mt-2 bg-white border rounded-xl shadow-lg max-h-56 overflow-y-auto p-3 z-20">
-          <input
-            className="w-full border rounded-lg p-2 mb-3"
-            placeholder="Search instrument..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-          />
-
-          {filtered.map((item) => (
-            <div
-              key={item}
-              className="p-2 hover:bg-neutral-100 rounded cursor-pointer flex justify-between"
-              onClick={() => toggle(item)}
-            >
-              <span>{item}</span>
-              {selected.includes(item) && <span>✔</span>}
-            </div>
-          ))}
-
-          <div className="mt-3 border-t pt-3">
-            <input
-              className="w-full border rounded-lg p-2"
-              placeholder="Other instrument"
-              value={other}
-              onChange={(e) => setOther(e.target.value)}
-            />
-
-            <button
-              className="mt-2 bg-black text-white py-1.5 w-full rounded-lg"
-              onClick={addOther}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// ⭐ FULLY STYLED PART 2 PAGE
 export default function Part2() {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
-
   const [rows, setRows] = useState([
-    {
-      instruments: "",
-      type: "",
-      mode: "",
-      beginner: "",
-      intermediate: "",
-      advanced: "",
-      performanceFee: "",
-    },
+    { instrument: "", action: "", offlineOnline: "", beginner: "", intermediate: "", advanced: "", performanceFee: "" }
   ]);
 
   const addRow = () => {
-    setRows([
-      ...rows,
-      {
-        instruments: "",
-        type: "",
-        mode: "",
-        beginner: "",
-        intermediate: "",
-        advanced: "",
-        performanceFee: "",
-      },
-    ]);
+    setRows([...rows, { instrument: "", action: "", offlineOnline: "", beginner: "", intermediate: "", advanced: "", performanceFee: "" }]);
   };
 
-  const updateRow = (i, field, value) => {
-    const updated = [...rows];
-    updated[i][field] = value;
-    setRows(updated);
+  const updateRow = (i, key, value) => {
+    const next = [...rows];
+    next[i][key] = value;
+    setRows(next);
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
+    await fetch("/api/submit2", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ rows }),
+    });
     setSubmitted(true);
   };
 
-  if (submitted) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center" style={{ backgroundColor: brand.offwhite }}>
-        <h2 className="text-3xl font-semibold text-neutral-900">Thank you for your response</h2>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: brand.offwhite }}>
-      {/* Header */}
+    <div className="min-h-screen bg-[#fafafa]">
       <header className="w-full bg-black border-b-4 border-pink-600 px-6 py-3">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center justify-center gap-4 flex-grow">
-            <img src={logo} alt="Maestera Logo" className="h-43 object-contain" />
-          </div>
+        <div className="max-w-6xl mx-auto flex items-center justify-center">
+          <img src={logo} alt="Maestera Logo" className="h-20 object-contain" />
         </div>
       </header>
 
-      {/* Main */}
-      <main className="max-w-5
+      <main className="max-w-4xl mx-auto px-6 py-10">
+        {submitted ? (
+          <div className="bg-white border rounded-2xl p-10 text-center shadow-md">
+            <h2 className="text-3xl font-semibold text-neutral-900">Thank you for your response!</h2>
+            <p className="mt-4 text-neutral-700">We will be in touch with you shortly.</p>
+          </div>
+        ) : (
+          <div className="bg-white border rounded-2xl p-8 shadow-md">
+            <h2 className="text-2xl font-semibold text-neutral-900 mb-6">Additional Details</h2>
+
+            {rows.map((row, i) => (
+              <div key={i} className="border rounded-xl p-5 mb-6 bg-neutral-50">
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-neutral-800 mb-1">Instrument</label>
+                  <select
+                    className="w-full border rounded-xl p-2.5"
+                    value={row.instrument}
+                    onChange={(e) => updateRow(i, "instrument", e.target.value)}
+                  >
+                    <option value="">Select Instrument</option>
+                    {INSTRUMENTS.map((inst) => (
+                      <option key={inst} value={inst}>{inst}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-neutral-800 mb-1">Teach or Perform?</label>
+                  <select
+                    className="w-full border rounded-xl p-2.5"
+                    value={row.action}
+                    onChange={(e) => updateRow(i, "action", e.target.value)}
+                  >
+                    <option value="">Select Option</option>
+                    <option value="teach">Teach</option>
+                    <option value="perform">Perform</option>
+                  </select>
+                </div>
+
+                {row.action === "perform" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-neutral-800 mb-1">Performance Fee (per hour)</label>
+                    <input
+                      type="number"
+                      className="w-full border rounded-xl p-2.5"
+                      value={row.performanceFee}
+                      onChange={(e) => updateRow(i, "performanceFee", e.target.value)}
+                    />
+                  </div>
+                )}
+
+                {row.action === "teach" && (
+                  <>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-neutral-800 mb-1">Class Type</label>
+                      <select
+                        className="w-full border rounded-xl p-2.5"
+                        value={row.offlineOnline}
+                        onChange={(e) => updateRow(i, "offlineOnline", e.target.value)}
+                      >
+                        <option value="">Select</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                      </select>
+                    </div>
+
+                    <div className="flex gap-4 mb-4">
+                      <input
+                        type="number"
+                        className="w-full border rounded-xl p-2.5"
+                        placeholder="Beginner Fee"
+                        value={row.beginner}
+                        onChange={(e) => updateRow(i, "beginner", e.target.value)}
+                      />
+                      <input
+                        type="number"
+                        className="w-full border rounded-xl p-2.5"
+                        placeholder="Intermediate Fee"
+                        value={row.intermediate}
+                        onChange={(e) => updateRow(i, "intermediate", e.target.value)}
+                      />
+                      <input
+                        type="number"
+                        className="w-full border rounded-xl p-2.5"
+                        placeholder="Advanced Fee"
+                        value={row.advanced}
+                        onChange={(e) => updateRow(i, "advanced", e.target.value)}
+                      />
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+
+            <button
+              className="w-full bg-neutral-900 text-white py-3 rounded-xl mb-6"
+              onClick={addRow}
+            >
+              + Add Another Instrument
+            </button>
+
+            <button
+              className="w-full bg-rose-600 text-white py-3 rounded-xl"
+              onClick={submitForm}
+            >
+              Submit
+            </button>
+          </div>
+        )}
+      </main>
+
+      <footer className="mt-16">
+        <div className="h-[5px] w-full bg-rose-600" />
+        <div className="py-6 text-center text-xs text-neutral-600">
+          © {new Date().getFullYear()} Maestera • Made with ♫
+        </div>
+      </footer>
+    </div>
+  );
+}
